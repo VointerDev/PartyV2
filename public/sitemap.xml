@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://partyhbg.se/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://partyhbg.se/events</loc><changefreq>daily</changefreq><priority>0.9</priority></url>
+  <url><loc>https://partyhbg.se/flashback</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/about</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://partyhbg.se/events/lonelordag-noise</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/after-dark-kappa</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/house-session</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/studentnatt</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/vinyl-friday</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/blackout</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/90s-forever</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/techno-torsdag</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/latin-night</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/hiphop-night</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/halloween</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/warehouse</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/foam</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/juldagen</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/events/nyar</loc><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://partyhbg.se/flashback/lonelordag-22-aug</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://partyhbg.se/flashback/after-dark-15-aug</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://partyhbg.se/flashback/house-session-18-jul</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://partyhbg.se/flashback/studentnatt-1-aug</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://partyhbg.se/flashback/blackout-25-jul</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://partyhbg.se/flashback/tivoli-sommarlive</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+</urlset>

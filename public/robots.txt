@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://partyhbg.se/sitemap.xml
