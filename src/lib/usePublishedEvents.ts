@@ -6,10 +6,12 @@ import {
   getHomeUpcomingEvents,
   getPublishedEvents,
   getPublishedFlashbacks,
+  getPublishedNews,
+  getSiteSettings,
 } from "../admin/cmsStore";
 import { isPastEvent } from "../data";
 
-export function usePublishedEvents() {
+function useCmsVersion() {
   const [version, setVersion] = useState(0);
 
   useEffect(() => {
@@ -22,12 +24,20 @@ export function usePublishedEvents() {
     };
   }, []);
 
+  return version;
+}
+
+export function usePublishedEvents() {
+  const version = useCmsVersion();
+
   return useMemo(
     () => ({
       events: getPublishedEvents(),
       featured: getFeaturedEvents(),
       homeUpcoming: getHomeUpcomingEvents(),
       flashbacks: getPublishedFlashbacks(),
+      news: getPublishedNews(),
+      site: getSiteSettings(),
     }),
     [version],
   );

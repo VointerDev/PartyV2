@@ -5,9 +5,11 @@ import { useAuth } from "./AuthProvider";
 
 const links = [
   { to: "/admin/dashboard", label: "Översikt", end: true },
-  { to: "/admin/events", label: "Evenemang" },
+  { to: "/admin/events", label: "Biljetter" },
   { to: "/admin/flashbacks", label: "Flashbacks" },
+  { to: "/admin/news", label: "Nyheter" },
   { to: "/admin/images", label: "Bilder" },
+  { to: "/admin/settings", label: "Webbplats" },
 ];
 
 export function AdminLayout() {
@@ -28,6 +30,9 @@ export function AdminLayout() {
         <p className="admin-sidebar-label">Admin</p>
 
         <nav className="admin-nav">
+          <NavLink to="/admin/edit" className="admin-nav-link admin-nav-link--accent">
+            Redigera live
+          </NavLink>
           {links.map((link) => (
             <NavLink
               key={link.to}

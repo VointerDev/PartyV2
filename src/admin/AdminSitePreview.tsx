@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { EventList } from "../components/EventList";
-import { FeaturedSlider } from "../components/FeaturedSlider";
 import { Logo } from "../components/Logo";
-import { LogoScroller } from "../components/LogoScroller";
 import {
   CMS_UPDATED_EVENT,
-  getFeaturedEvents,
   getHomeUpcomingEvents,
   getPublishedEvents,
+  getPublishedNews,
+  getSiteSettings,
   loadCms,
 } from "./cmsStore";
 
@@ -26,8 +25,9 @@ export function AdminSitePreview() {
 
   const cms = loadCms();
   const events = getPublishedEvents();
-  const featured = getFeaturedEvents();
   const upcoming = getHomeUpcomingEvents();
+  const news = getPublishedNews();
+  const site = getSiteSettings();
 
   return (
     <div className="admin-preview" key={version}>
@@ -68,13 +68,27 @@ export function AdminSitePreview() {
         <div className="admin-preview-body">
           {tab === "home" ? (
             <>
-              <p className="admin-preview-section">↳ Utvalt · {featured.length} widgets</p>
-              <FeaturedSlider items={featured} />
-              <LogoScroller />
-              <p className="admin-preview-section">↳ Kommande · {upcoming.length} event</p>
+              <div className="admin-preview-hero">
+                <img src={site.heroPoster || "/photos/party.jpg"} alt="" />
+                <p className="admin-preview-hero-title">{site.heroTitle}</p>
+              </div>
+              <p className="admin-preview-section">
+                ↳ {site.upcomingTitle} · {upcoming.length} st
+              </p>
               <div className="admin-preview-list">
                 <EventList items={upcoming} />
               </div>
+              <p className="admin-preview-section">
+                ↳ {site.newsTitle} · {news.length} st
+              </p>
+              <ul className="admin-preview-news">
+                {news.slice(0, 3).map((item) => (
+                  <li key={item.slug}>
+                    <strong>{item.title}</strong>
+                    <span className="text-muted">{item.excerpt}</span>
+                  </li>
+                ))}
+              </ul>
             </>
           ) : (
             <>
@@ -88,7 +102,7 @@ export function AdminSitePreview() {
       </div>
 
       <p className="admin-preview-foot text-muted">
-        {cms.featuredSlugs.length} utvalda · {events.length} event totalt
+        {cms.news.length} nyheter · {events.length} biljetter · {cms.flashbacks.length} flashbacks
       </p>
     </div>
   );

@@ -13,7 +13,7 @@ export function AdminLogin() {
 
   useEffect(() => {
     if (!loading && isAuthenticated) {
-      navigate("/admin/dashboard", { replace: true });
+      navigate("/admin/edit", { replace: true });
     }
   }, [isAuthenticated, loading, navigate]);
 
@@ -27,7 +27,7 @@ export function AdminLogin() {
       setError(message);
       return;
     }
-    navigate("/admin/dashboard");
+    navigate("/admin/edit");
   }
 
   return (

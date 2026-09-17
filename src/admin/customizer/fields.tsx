@@ -1,0 +1,298 @@
+import { useRef, useState, type ReactNode } from "react";
+import { fileToCompressedDataUrl } from "../imageUpload";
+
+export function Field({
+  label,
+  hint,
+  field,
+  children,
+}: {
+  label: string;
+  hint?: string;
+  field?: string;
+  children: ReactNode;
+}) {
+  return (
+    <label className="cz-field" data-cz-field={field}>
+      <span className="cz-field-label">{label}</span>
+      {children}
+      {hint ? <em className="cz-field-hint">{hint}</em> : null}
+    </label>
+  );
+}
+
+export function TextField({
+  label,
+  value,
+  onChange,
+  onBlur,
+  hint,
+  field,
+  placeholder,
+  type = "text",
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  onBlur?: () => void;
+  hint?: string;
+  field?: string;
+  placeholder?: string;
+  type?: "text" | "date" | "number";
+}) {
+  return (
+    <Field label={label} hint={hint} field={field}>
+      <input
+        className="cz-input"
+        type={type}
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
+      />
+    </Field>
+  );
+}
+
+export function TextAreaField({
+  label,
+  value,
+  onChange,
+  hint,
+  field,
+  rows = 4,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  hint?: string;
+  field?: string;
+  rows?: number;
+  placeholder?: string;
+}) {
+  return (
+    <Field label={label} hint={hint} field={field}>
+      <textarea
+        className="cz-input cz-textarea"
+        rows={rows}
+        value={value}
+        placeholder={placeholder}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </Field>
+  );
+}
+
+export function ImageField({
+  label,
+  value,
+  onChange,
+  hint,
+  field,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  hint?: string;
+  field?: string;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const uploaded = value.startsWith("data:");
+
+  async function handleFile(file: File) {
+    setBusy(true);
+    setError(null);
+    try {
+      onChange(await fileToCompressedDataUrl(file));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Uppladdningen misslyckades.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="cz-field" data-cz-field={field}>
+      <span className="cz-field-label">{label}</span>
+
+      <div className="cz-image-row">
+        <div className="cz-image-thumb">
+          {value ? <img src={value} alt="" /> : <span>Tom</span>}
+        </div>
+        <div className="cz-image-actions">
+          <button
+            type="button"
+            className="cz-button cz-button--small"
+            disabled={busy}
+            onClick={() => input.current?.click()}
+          >
+            {busy ? "Laddar…" : "Ladda upp"}
+          </button>
+          {value ? (
+            <button type="button" className="cz-text-button" onClick={() => onChange("")}>
+              Ta bort
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      <input
+        className="cz-input"
+        value={uploaded ? "Uppladdad bild" : value}
+        disabled={uploaded}
+        placeholder="/photos/party.jpg eller https://…"
+        onChange={(e) => onChange(e.target.value)}
+      />
+
+      {error ? <em className="cz-field-hint cz-field-hint--error">{error}</em> : null}
+      {hint && !error ? <em className="cz-field-hint">{hint}</em> : null}
+
+      <input
+        ref={input}
+        type="file"
+        accept="image/*"
+        hidden
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) void handleFile(file);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
+export function Toggle({
+  label,
+  checked,
+  onChange,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}) {
+  return (
+    <label className="cz-toggle">
+      <span>{label}</span>
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      <i aria-hidden="true" />
+    </label>
+  );
+}
+
+function toHex(value: string, fallback: string) {
+  const trimmed = value.trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(trimmed)) return trimmed;
+  if (/^#[0-9a-fA-F]{3}$/.test(trimmed)) {
+    const [, a, b, c] = trimmed;
+    return `#${a}${a}${b}${b}${c}${c}`;
+  }
+  return fallback;
+}
+
+export function ColorField({
+  label,
+  value,
+  onChange,
+  hint,
+  field,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  hint?: string;
+  field?: string;
+}) {
+  const hex = toHex(value, "#f16cb3");
+
+  return (
+    <Field label={label} hint={hint} field={field}>
+      <div className="cz-color-row">
+        <input
+          className="cz-color-swatch"
+          type="color"
+          value={hex}
+          onChange={(e) => onChange(e.target.value)}
+          aria-label={label}
+        />
+        <input
+          className="cz-input"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="#f16cb3"
+        />
+      </div>
+    </Field>
+  );
+}
+
+export function SelectField({
+  label,
+  value,
+  onChange,
+  options,
+  field,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: { value: string; label: string }[];
+  field?: string;
+}) {
+  return (
+    <Field label={label} field={field}>
+      <select className="cz-input" value={value} onChange={(e) => onChange(e.target.value)}>
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </Field>
+  );
+}
+
+export function RangeField({
+  label,
+  value,
+  onChange,
+  min,
+  max,
+  step = 1,
+  unit = "",
+  hint,
+  field,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  min: number;
+  max: number;
+  step?: number;
+  unit?: string;
+  hint?: string;
+  field?: string;
+}) {
+  return (
+    <Field label={label} hint={hint} field={field}>
+      <div className="cz-range-row">
+        <input
+          className="cz-range"
+          type="range"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+        />
+        <span className="cz-range-value">
+          {value}
+          {unit}
+        </span>
+      </div>
+    </Field>
+  );
+}

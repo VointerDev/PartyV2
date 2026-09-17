@@ -1,19 +1,20 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getEventBySlug } from "../admin/cmsStore";
 import { PageMeta } from "../components/PageMeta";
 import {
   agendaDate,
   eventCategory,
   lineupOf,
 } from "../data";
-import { flashbackForPublishedEvent } from "../lib/usePublishedEvents";
+import { editable } from "../lib/previewBridge";
+import { flashbackForPublishedEvent, usePublishedEvents } from "../lib/usePublishedEvents";
 import { eventJsonLd, eventMetaDescription } from "../lib/seo";
 import { NotFound } from "./NotFound";
 
 export function EventDetail() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const event = slug ? getEventBySlug(slug) : undefined;
+  const { events } = usePublishedEvents();
+  const event = events.find((item) => item.slug === slug);
   if (!event) return <NotFound />;
 
   const flashback = flashbackForPublishedEvent(event.slug);
@@ -21,7 +22,7 @@ export function EventDetail() {
   const imageAlt = `${event.title} på ${event.venue} i Helsingborg — fest och nattliv`;
 
   return (
-    <article className="page detail-page">
+    <article className="page detail-page" {...editable(`event:${event.slug}`, event.title)}>
       <PageMeta
         title={`${event.title} · ${event.venue} Helsingborg`}
         description={eventMetaDescription(event)}
@@ -42,62 +43,64 @@ export function EventDetail() {
       >
         ← Evenemang
       </Link>
-      <h1 className="section-label">↳ {event.title}</h1>
 
-      <div className="detail-head">
-        <div className="detail-intro">
+      <div className="detail-layout">
+        <div className="detail-copy-col">
+          <p className="detail-kicker">{eventCategory(event)}</p>
+          <h1 className="detail-title glow-title">{event.title}</h1>
           <p className="detail-venue">{event.venue}</p>
-          <p className="detail-address text-muted">{event.address}</p>
+          <p className="detail-address">{event.address}</p>
           {copy ? <p className="detail-copy">{copy}</p> : null}
+
+          <div className="detail-aside">
+            <a
+              href="https://instagram.com/partyhbg"
+              target="_blank"
+              rel="noreferrer"
+              className="btn-action"
+            >
+              Köp biljetter
+            </a>
+            {flashback ? (
+              <Link to={`/flashback/${flashback.slug}`} className="detail-flashback">
+                Se flashback · {flashback.count} bilder →
+              </Link>
+            ) : null}
+          </div>
+
+          <dl className="detail-facts">
+            <div>
+              <dt>Datum</dt>
+              <dd>{agendaDate(event.date)}</dd>
+            </div>
+            <div>
+              <dt>Tid</dt>
+              <dd>{event.time}</dd>
+            </div>
+            <div>
+              <dt>Lineup</dt>
+              <dd>{lineupOf(event)}</dd>
+            </div>
+            <div>
+              <dt>Ålder</dt>
+              <dd>{event.age}</dd>
+            </div>
+            <div>
+              <dt>Pris</dt>
+              <dd>{event.price}</dd>
+            </div>
+          </dl>
         </div>
 
-        <aside className="detail-aside">
-          <a
-            href="https://instagram.com/partyhbg"
-            target="_blank"
-            rel="noreferrer"
-            className="detail-tickets"
-          >
-            Köp biljetter →
-          </a>
-          {flashback ? (
-            <Link to={`/flashback/${flashback.slug}`} className="detail-flashback">
-              Se flashback · {flashback.count} bilder →
-            </Link>
-          ) : null}
-        </aside>
+        <div className="detail-media-col">
+          <div className="detail-hero">
+            <span className="graffiti-tag" aria-hidden="true">
+              NIGHT
+            </span>
+            <img src={event.image} alt={imageAlt} decoding="async" fetchPriority="high" />
+          </div>
+        </div>
       </div>
-
-      <div className="detail-hero">
-        <img src={event.image} alt={imageAlt} decoding="async" fetchPriority="high" />
-      </div>
-
-      <dl className="detail-facts">
-        <div>
-          <dt>Datum</dt>
-          <dd>{agendaDate(event.date)}</dd>
-        </div>
-        <div>
-          <dt>Tid</dt>
-          <dd>{event.time}</dd>
-        </div>
-        <div>
-          <dt>Lineup</dt>
-          <dd>{lineupOf(event)}</dd>
-        </div>
-        <div>
-          <dt>Kategori</dt>
-          <dd>{eventCategory(event)}</dd>
-        </div>
-        <div>
-          <dt>Ålder</dt>
-          <dd>{event.age}</dd>
-        </div>
-        <div>
-          <dt>Pris</dt>
-          <dd>{event.price}</dd>
-        </div>
-      </dl>
     </article>
   );
 }

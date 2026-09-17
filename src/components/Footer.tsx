@@ -3,7 +3,6 @@ import { Logo } from "./Logo";
 
 const navLinks = [
   { to: "/", label: "Hem", end: true },
-  { to: "/events", label: "Evenemang" },
   { to: "/flashback", label: "Flashback" },
   { to: "/about", label: "Om oss" },
 ];
@@ -72,7 +71,7 @@ export function Footer() {
               <li>
                 <a href="mailto:hello@partyhbg.se">hello@partyhbg.se</a>
               </li>
-              <li>Sverige</li>
+              <li className="footer-plain">Sverige</li>
             </ul>
           </div>
         </div>

@@ -11,6 +11,7 @@ import { slugify } from "../admin/cmsStore";
 import { PageMeta } from "../components/PageMeta";
 import type { Flashback } from "../data";
 import { agendaDate, eventYear } from "../data";
+import { editable } from "../lib/previewBridge";
 import { usePublishedEvents } from "../lib/usePublishedEvents";
 import { flashbackMetaDescription } from "../lib/seo";
 import { NotFound } from "./NotFound";
@@ -272,42 +273,50 @@ export function Flashback() {
   const { flashbacks } = usePublishedEvents();
 
   return (
-    <section className="page pb-24">
+    <section className="page flashback-page street-section">
       <PageMeta
         title="Flashback — bilder från fester i Helsingborg"
         description="Flashbacks och vimmelbilder från tidigare evenemang i Helsingborg. Se bilder från studentfester, klubb och nattliv."
         path="/flashback"
       />
 
-      <h1 className="page-title">Flashback</h1>
+      <div className="page-hero-banner">
+        <h1 className="glow-title glow-title--xl">Flashback</h1>
+        <p className="page-hero-copy">Bilder från nätter som redan brunnit. Scrolla, öppna, spara.</p>
+      </div>
 
-      <div className="flashback-list">
-        <div className="list-grid list-head flashback-list-head">
-          <span>Evenemang</span>
-          <span>Plats</span>
-          <span>Bilder</span>
-          <span className="list-year">Datum</span>
+      <div className="flashback-rules">
+        <div className="rules-nav flashback-index">
+          {flashbacks.map((item, i) => (
+            <Link
+              key={item.slug}
+              to={`/flashback/${item.slug}`}
+              className={i === 0 ? "rules-nav-item is-hot" : "rules-nav-item"}
+            >
+              <span>
+                {item.title}
+                <small>
+                  {item.venue} · {item.count} bilder · {eventYear(item.date)}
+                </small>
+              </span>
+              <span aria-hidden="true">→</span>
+            </Link>
+          ))}
         </div>
-        {flashbacks.map((item) => (
-          <Link key={item.slug} to={`/flashback/${item.slug}`} className="flashback-list-row list-row">
-            <span className="list-col-event">↳ {item.title}</span>
-            <span className="list-col-meta">
-              {item.venue} · {item.count} bilder · {eventYear(item.date)}
-            </span>
-            <span className="list-col-venue">{item.venue}</span>
-            <span className="list-col-cat">{item.count}</span>
-            <span className="list-col-date">{eventYear(item.date)}</span>
-          </Link>
-        ))}
       </div>
 
       <div className="flashback-grid">
         {flashbacks.map((item) => (
-          <Link key={item.slug} to={`/flashback/${item.slug}`} className="flashback-card">
+          <Link
+            key={item.slug}
+            to={`/flashback/${item.slug}`}
+            className="flashback-card"
+            {...editable(`flashback:${item.slug}`, item.title)}
+          >
             <img src={item.cover} alt={`${item.title} på ${item.venue} i Helsingborg`} loading="lazy" decoding="async" />
             <div className="flashback-card-meta">
               <p>{item.title}</p>
-              <p className="text-muted">
+              <p>
                 {item.venue} · {item.count} bilder · {agendaDate(item.date)}
               </p>
             </div>
@@ -339,7 +348,10 @@ export function FlashbackGallery() {
   if (!gallery) return <NotFound />;
 
   return (
-    <article className="page pb-16">
+    <article
+      className="page flashback-gallery-page street-section"
+      {...editable(`flashback:${gallery.slug}`, gallery.title)}
+    >
       <PageMeta
         title={`${gallery.title} · Flashback Helsingborg`}
         description={flashbackMetaDescription(gallery)}
@@ -347,14 +359,16 @@ export function FlashbackGallery() {
         image={gallery.cover}
       />
 
-      <Link to="/flashback" className="text-link text-muted hover:text-white">
+      <Link to="/flashback" className="detail-back-link">
         ← Alla flashbacks
       </Link>
 
-      <h1 className="section-label mt-8">↳ {gallery.title}</h1>
-      <p className="mb-8 text-muted">
-        {gallery.venue} · {gallery.count} bilder · {agendaDate(gallery.date)}
-      </p>
+      <div className="page-hero-banner">
+        <h1 className="glow-title">{gallery.title}</h1>
+        <p className="page-hero-copy">
+          {gallery.venue} · {gallery.count} bilder · {agendaDate(gallery.date)}
+        </p>
+      </div>
 
       <div className="flashback-photos">
         {gallery.photos.map((src, i) => (

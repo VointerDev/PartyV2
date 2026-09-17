@@ -37,6 +37,15 @@ export type LegalDoc = {
   body: string[];
 };
 
+export type NewsItem = {
+  slug: string;
+  date: string;
+  tag: string;
+  title: string;
+  excerpt: string;
+  image: string;
+};
+
 import { cercinoGalleryPool, cercinoPhotos } from "./cercinoImages";
 
 const photos = cercinoPhotos;
@@ -340,6 +349,45 @@ export const flashbacks: Flashback[] = [
 
 /** @deprecated use flashbacks */
 export const galleries = flashbacks;
+
+export const newsItems: NewsItem[] = [
+  {
+    slug: "lonelordag-noise",
+    date: "2026-09-02",
+    tag: "Helsingborg",
+    title: "Lönelördag är tillbaka på NOISE",
+    excerpt:
+      "Skånes klassiska pay-day-kväll rullar vidare — gästlista, residents och late night till 05.00.",
+    image: cercinoPhotos.crowd,
+  },
+  {
+    slug: "kappa-after-dark",
+    date: "2026-08-28",
+    tag: "Klubb",
+    title: "After Dark tar över Kappa Bar",
+    excerpt:
+      "Söndagsnatt i Helsingborg med mörkare sound, 20+ och biljetter från 120 kr.",
+    image: cercinoPhotos.club,
+  },
+  {
+    slug: "studentnatt-skane",
+    date: "2026-08-20",
+    tag: "Student",
+    title: "Studentnatt: hela Skåne samlas i HBG",
+    excerpt:
+      "Lund, Malmö och Helsingborg på samma dansgolv — biljetter och gästlista via PartyHBG.",
+    image: cercinoPhotos.dance,
+  },
+  {
+    slug: "flashback-august",
+    date: "2026-08-14",
+    tag: "Flashback",
+    title: "Nya flashbacks från augusti",
+    excerpt:
+      "Bilder från NOC, Tivoli och Kappa Bar — se vilka som var där och spara dina favoriter.",
+    image: cercinoPhotos.party,
+  },
+];
 
 export const legalDocs: LegalDoc[] = [
   {

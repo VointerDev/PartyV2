@@ -4,8 +4,8 @@ import { Logo } from "./Logo";
 
 const links = [
   { to: "/", label: "Hem", end: true },
-  { to: "/events", label: "Evenemang", match: "/events" },
   { to: "/flashback", label: "Flashback", match: "/flashback" },
+  { to: "/about", label: "Om oss" },
 ];
 
 function isLinkActive(pathname: string, to: string, end?: boolean, match?: string) {
@@ -50,22 +50,6 @@ export function Navbar() {
         </nav>
 
         <div className="navbar-actions">
-          <a
-            href="https://instagram.com/partyhbg"
-            target="_blank"
-            rel="noreferrer"
-            className="navbar-ghost"
-          >
-            @partyhbg
-          </a>
-          <a
-            href="https://instagram.com/cercinoofficial"
-            target="_blank"
-            rel="noreferrer"
-            className="navbar-ghost"
-          >
-            @cercinoofficial
-          </a>
           <NavLink to="/events" className="navbar-cta">
             Biljetter
           </NavLink>
@@ -96,30 +80,12 @@ export function Navbar() {
               }
               onClick={() => setOpen(false)}
             >
-              ↳ {l.label}
+              {l.label}
             </NavLink>
           ))}
           <NavLink to="/events" className="navbar-mobile-cta" onClick={() => setOpen(false)}>
             Biljetter
           </NavLink>
-          <a
-            href="https://instagram.com/partyhbg"
-            target="_blank"
-            rel="noreferrer"
-            className="navbar-mobile-link"
-            onClick={() => setOpen(false)}
-          >
-            ↳ @partyhbg
-          </a>
-          <a
-            href="https://instagram.com/cercinoofficial"
-            target="_blank"
-            rel="noreferrer"
-            className="navbar-mobile-link"
-            onClick={() => setOpen(false)}
-          >
-            ↳ @cercinoofficial
-          </a>
         </nav>
       </div>
     </header>
