@@ -1,90 +1,43 @@
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Logo } from "./Logo";
-
-const navLinks = [
-  { to: "/", label: "Hem", end: true },
-  { to: "/flashback", label: "Flashback" },
-  { to: "/about", label: "Om oss" },
-];
-
-const legalLinks = [
-  { to: "/about#privacy", label: "Integritet" },
-  { to: "/about#terms", label: "Villkor" },
-  { to: "/about#cookies", label: "Cookies" },
-  { to: "/about#photos", label: "Bilder" },
-];
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "../lib/instagram";
 
 export function Footer() {
   return (
-    <footer className="footer">
-      <div className="footer-inner">
-        <div className="footer-top">
-          <div className="footer-brand">
-            <Logo className="footer-logo-img" />
-            <p className="footer-tagline">
-              Nattliv och fest i Helsingborg. Gästlista, studentkvällar och flashbacks.
-            </p>
-          </div>
+    <footer className="spark-footer">
+      <div className="spark-footer-inner">
+        <Link to="/" className="spark-footer-logo-link" aria-label="PartyHBG hem">
+          <Logo className="spark-footer-logo" />
+        </Link>
 
-          <div className="footer-col">
-            <p className="footer-heading">Navigera</p>
-            <ul className="footer-links">
-              {navLinks.map((l) => (
-                <li key={l.label}>
-                  <NavLink to={l.to} end={l.end}>
-                    {l.label}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <h2 className="spark-section-title spark-footer-title">
+          Helsingborgs <span className="spark-mark">studentfester</span>
+        </h2>
 
-          <div className="footer-col">
-            <p className="footer-heading">Juridiskt</p>
-            <ul className="footer-links">
-              {legalLinks.map((l) => (
-                <li key={l.label}>
-                  <NavLink to={l.to}>{l.label}</NavLink>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <div className="spark-footer-row">
+          <p className="spark-footer-lead">
+            Studentnätter, gästlista och biljetter — fester för dem som pluggar, festar och stannar
+            kvar till stängning.
+          </p>
 
-          <div className="footer-col">
-            <p className="footer-heading">Kontakt</p>
-            <ul className="footer-links">
-              <li>
-                <a href="https://instagram.com/partyhbg" target="_blank" rel="noreferrer">
-                  @partyhbg
-                </a>
-              </li>
-              <li>
-                <a href="https://instagram.com/cercinoofficial" target="_blank" rel="noreferrer">
-                  @cercinoofficial
-                </a>
-              </li>
-              <li>
-                <a href="https://cercino.se" target="_blank" rel="noreferrer">
-                  Cercino.se
-                </a>
-              </li>
-              <li>
-                <a href="mailto:hello@partyhbg.se">hello@partyhbg.se</a>
-              </li>
-              <li className="footer-plain">Sverige</li>
-            </ul>
-          </div>
+          <nav className="spark-footer-nav" aria-label="Sidfot">
+            <a href="/#scener">Scener</a>
+            <Link to="/flashback">Flashback</Link>
+            <a href="/#instagram">Instagram</a>
+            <a href="mailto:hello@partyhbg.se">Kontakta oss</a>
+          </nav>
         </div>
 
-        <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} PartyHBG</p>
-          <div className="footer-bottom-links">
-            <a href="https://instagram.com/partyhbg" target="_blank" rel="noreferrer">
-              Instagram
-            </a>
-            <NavLink to="/events">Biljetter</NavLink>
-          </div>
+        <div className="spark-footer-actions">
+          <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="spark-btn">
+            Följ {INSTAGRAM_HANDLE} <span aria-hidden="true">↗</span>
+          </a>
+          <a href="mailto:hello@partyhbg.se" className="spark-btn spark-btn--ghost">
+            Mejla oss
+          </a>
         </div>
+
+        <p className="spark-footer-copy">© {new Date().getFullYear()} PartyHBG</p>
       </div>
     </footer>
   );

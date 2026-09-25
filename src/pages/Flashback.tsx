@@ -3,7 +3,9 @@ import { createPortal } from "react-dom";
 import { Link, useParams } from "react-router-dom";
 import { WatermarkedImage } from "../components/WatermarkedImage";
 import {
+  DOWNLOAD_EFFECTS,
   downloadPhoto,
+  type DownloadEffect,
   type DownloadFormat,
   type DownloadQuality,
 } from "../lib/downloadPhoto";
@@ -54,6 +56,7 @@ function Lightbox({ gallery, activeIndex, onClose, onPrev, onNext }: LightboxPro
   const [downloadOpen, setDownloadOpen] = useState(false);
   const [downloadFormat, setDownloadFormat] = useState<DownloadFormat>("jpg");
   const [downloadQuality, setDownloadQuality] = useState<DownloadQuality>("high");
+  const [downloadEffect, setDownloadEffect] = useState<DownloadEffect>("polaroid");
   const [downloading, setDownloading] = useState(false);
   const touchX = useRef<number | null>(null);
   const downloadRef = useRef<HTMLDivElement>(null);
@@ -126,9 +129,11 @@ function Lightbox({ gallery, activeIndex, onClose, onPrev, onNext }: LightboxPro
     setDownloading(true);
     try {
       await downloadPhoto(activeSrc, filename, {
-        withWatermark,
+        withWatermark: downloadEffect === "polaroid" ? false : withWatermark,
         format: downloadFormat,
         quality: downloadQuality,
+        effect: downloadEffect,
+        caption: gallery.title,
       });
       setDownloadOpen(false);
     } catch {
@@ -195,6 +200,20 @@ function Lightbox({ gallery, activeIndex, onClose, onPrev, onNext }: LightboxPro
               </button>
               {downloadOpen ? (
                 <div className="lightbox-download-menu" role="dialog" aria-label="Nedladdningsalternativ">
+                  <p className="lightbox-download-heading">Effekt</p>
+                  <div className="lightbox-effect-grid">
+                    {DOWNLOAD_EFFECTS.map((effect) => (
+                      <button
+                        key={effect.id}
+                        type="button"
+                        className={downloadEffect === effect.id ? "is-active" : undefined}
+                        onClick={() => setDownloadEffect(effect.id)}
+                      >
+                        {effect.label}
+                      </button>
+                    ))}
+                  </div>
+
                   <p className="lightbox-download-heading">Format</p>
                   <div className="lightbox-segmented">
                     <button
@@ -246,14 +265,16 @@ function Lightbox({ gallery, activeIndex, onClose, onPrev, onNext }: LightboxPro
                   >
                     {downloading ? "Laddar ner…" : "Ladda ner bild"}
                   </button>
-                  <button
-                    type="button"
-                    className="lightbox-download-option"
-                    disabled={downloading}
-                    onClick={() => handleDownload(false)}
-                  >
-                    Original utan stämpel
-                  </button>
+                  {downloadEffect !== "polaroid" ? (
+                    <button
+                      type="button"
+                      className="lightbox-download-option"
+                      disabled={downloading}
+                      onClick={() => handleDownload(false)}
+                    >
+                      Utan stämpel
+                    </button>
+                  ) : null}
                 </div>
               ) : null}
             </div>
@@ -373,12 +394,15 @@ export function FlashbackGallery() {
       <div className="flashback-photos">
         {gallery.photos.map((src, i) => (
           <button key={src + i} type="button" onClick={() => setActiveIndex(i)} className="flashback-photo">
-            <img
-              src={src}
-              alt={`${gallery.title} bild ${i + 1}`}
-              loading={i > 3 ? "lazy" : "eager"}
-              decoding="async"
-            />
+            <span className="flashback-polaroid">
+              <img
+                src={src}
+                alt={`${gallery.title} bild ${i + 1}`}
+                loading={i > 3 ? "lazy" : "eager"}
+                decoding="async"
+              />
+              <span className="flashback-polaroid-caption">{gallery.title}</span>
+            </span>
           </button>
         ))}
       </div>

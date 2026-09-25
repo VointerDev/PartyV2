@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@behold/react": "^0.1.11",
     "@supabase/supabase-js": "^2.112.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

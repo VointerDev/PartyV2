@@ -1,65 +1,89 @@
-import { type CSSProperties } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { EventList } from "../components/EventList";
 import { PageMeta } from "../components/PageMeta";
-import { editable } from "../lib/previewBridge";
+import { InstagramFeed } from "../components/InstagramFeed";
 import { usePublishedEvents } from "../lib/usePublishedEvents";
 import { DEFAULT_DESCRIPTION } from "../lib/seo";
+import { INSTAGRAM_URL } from "../lib/instagram";
+import type { Flashback } from "../data";
 
-function HeroLink({
-  to,
-  className,
-  target,
-  label,
-  children,
-}: {
-  to: string;
-  className: string;
-  target: string;
-  label: string;
-  children: string;
-}) {
-  const marks = editable(target, label);
+const AVATARS = ["/photos/dj.jpg", "/photos/crowd.jpg", "/photos/dance.jpg"];
 
-  if (/^(https?:|mailto:|tel:)/.test(to)) {
-    return (
-      <a href={to} className={className} target="_blank" rel="noreferrer" {...marks}>
-        {children}
-      </a>
-    );
-  }
+const FALLBACK_VENUES = ["HETCH", "Campus"];
 
-  return (
-    <Link to={to || "/"} className={className} {...marks}>
-      {children}
-    </Link>
-  );
+function venueKey(venue: string) {
+  return venue.trim().toLowerCase();
 }
 
-export function Home() {
-  const { homeUpcoming, news, site } = usePublishedEvents();
+function latestFlashbackByVenue(flashbacks: Flashback[]) {
+  const map = new Map<string, Flashback>();
 
-  const layoutStyle = {
-    "--hero-title-size": `${site.heroTitleSize || 72}px`,
-    "--hero-title-max": `${site.heroTitleMaxWidth || 900}px`,
-    "--hero-height": `${site.heroHeight || 56}vh`,
-    "--content-max": `${site.contentMaxWidth || 1600}px`,
-    "--section-title-size": `${site.sectionTitleSize || 40}px`,
-  } as CSSProperties;
+  for (const item of [...flashbacks].sort((a, b) => b.date.localeCompare(a.date))) {
+    const key = venueKey(item.venue);
+    if (!map.has(key)) map.set(key, item);
+  }
+
+  return map;
+}
+
+type VenueEntry = {
+  label: string;
+  cover: string;
+  to?: string;
+};
+
+export function Home() {
+  const { site, flashbacks } = usePublishedEvents();
+
+  const venues = useMemo(() => {
+    const byVenue = latestFlashbackByVenue(flashbacks);
+    const entries: VenueEntry[] = [];
+    const seen = new Set<string>();
+
+    for (const item of [...flashbacks].sort((a, b) => b.date.localeCompare(a.date))) {
+      const key = venueKey(item.venue);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const latest = byVenue.get(key)!;
+      entries.push({
+        label: `${latest.venue}, Helsingborg`,
+        cover: latest.cover,
+        to: `/flashback/${latest.slug}`,
+      });
+    }
+
+    for (const name of FALLBACK_VENUES) {
+      const key = venueKey(name);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      entries.push({
+        label: `${name}, Helsingborg`,
+        cover: "/photos/club.jpg",
+        to: "/flashback",
+      });
+    }
+
+    entries.push({
+      label: "Fler scener snart",
+      cover: "/photos/stage.jpg",
+    });
+
+    return entries;
+  }, [flashbacks]);
+
+  const [activeVenue, setActiveVenue] = useState(0);
+  const active = venues[activeVenue] ?? venues[0];
 
   return (
-    <main
-      className={`home-page home-page--align-${site.heroAlign}`}
-      style={layoutStyle}
-    >
+    <div className="spark-home">
       <PageMeta
-        title="Fest och evenemang i Helsingborg"
+        title="Studentfester i Helsingborg"
         description={DEFAULT_DESCRIPTION}
         path="/"
       />
 
-      <section className="home-hero" aria-label={site.heroTitle} {...editable("site:hero", "Hero")}>
-        <div className="home-hero-media" aria-hidden="true" {...editable("site:heroMedia", "Video / bild")}>
+      <section className="spark-hero">
+        <div className="spark-hero-media" aria-hidden="true">
           {site.heroVideo ? (
             <video
               key={site.heroVideo}
@@ -67,7 +91,7 @@ export function Home() {
               muted
               loop
               playsInline
-              poster={site.heroPoster || undefined}
+              poster={site.heroPoster || "/photos/party.jpg"}
               preload="metadata"
             >
               <source src={site.heroVideo} type="video/mp4" />
@@ -76,61 +100,90 @@ export function Home() {
             <img src={site.heroPoster || "/photos/party.jpg"} alt="" />
           )}
         </div>
-        <div className="home-hero-veil" aria-hidden="true" />
-        <div className="home-hero-inner">
-          <h1 className="home-hero-title" {...editable("site:heroTitle", "Rubrik")}>
-            {site.heroTitle}
+        <div className="spark-hero-veil" aria-hidden="true" />
+
+        <div className="spark-hero-content">
+          <h1 className="spark-hero-title">
+            Upptäck studentfesten{" "}
+            <span className="spark-mark">genom nätter</span> som sätter Helsingborg i rörelse
           </h1>
-          <div className="home-hero-actions">
-            {site.heroPrimaryLabel ? (
-              <HeroLink
-                to={site.heroPrimaryLink}
-                className="home-hero-cta"
-                target="site:heroPrimary"
-                label="Knapp 1"
-              >
-                {site.heroPrimaryLabel}
-              </HeroLink>
-            ) : null}
-            {site.heroSecondaryLabel ? (
-              <HeroLink
-                to={site.heroSecondaryLink}
-                className="home-hero-ghost"
-                target="site:heroSecondary"
-                label="Knapp 2"
-              >
-                {site.heroSecondaryLabel}
-              </HeroLink>
-            ) : null}
+
+          <div className="spark-hero-bottom">
+            <p className="spark-hero-lead">
+              Studentfester, klubbkvällar och lönelördagar — gästlista, biljetter och det som händer
+              efter midnatt. För dig som vill ut.
+            </p>
+
+            <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="spark-feature">
+              <div className="spark-avatars" aria-hidden="true">
+                {AVATARS.map((src) => (
+                  <img key={src} src={src} alt="" />
+                ))}
+                <span>+120</span>
+              </div>
+              <p className="spark-feature-title">
+                Lönelördag på NOISE <span aria-hidden="true">↗</span>
+              </p>
+            </a>
           </div>
         </div>
       </section>
 
-      <section className="page home-upcoming">
-        <div className="home-upcoming-head" {...editable("site:upcoming", "Rubrik & antal biljetter")}>
-          <h2>{site.upcomingTitle}</h2>
+      <section className="spark-venues" id="scener">
+        <div className="spark-venues-grid">
+          <div className="spark-venues-left">
+            <div className="spark-venues-photo">
+              <img
+                key={active?.cover}
+                src={active?.cover || "/photos/club.jpg"}
+                alt={active ? `Flashback från ${active.label}` : "Klubbscen i Helsingborg"}
+              />
+            </div>
+          </div>
+
+          <div className="spark-venues-right">
+            <ul className="spark-venue-list">
+              {venues.map((venue, i) => {
+                const isActive = i === activeVenue;
+                const className = isActive ? "is-active" : undefined;
+                const label = (
+                  <>
+                    {venue.label}
+                    {isActive ? <span aria-hidden="true"> →</span> : null}
+                  </>
+                );
+
+                return (
+                  <li key={venue.label}>
+                    {venue.to ? (
+                      <Link
+                        to={venue.to}
+                        className={className}
+                        onMouseEnter={() => setActiveVenue(i)}
+                        onFocus={() => setActiveVenue(i)}
+                      >
+                        {label}
+                      </Link>
+                    ) : (
+                      <button
+                        type="button"
+                        className={className}
+                        onMouseEnter={() => setActiveVenue(i)}
+                        onFocus={() => setActiveVenue(i)}
+                        onClick={() => setActiveVenue(i)}
+                      >
+                        {label}
+                      </button>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
-        <EventList items={homeUpcoming} />
       </section>
 
-      <section className="page home-news">
-        <div className="home-upcoming-head" {...editable("site:news", "Rubrik för nyheter")}>
-          <h2>{site.newsTitle}</h2>
-        </div>
-        <div className="news-grid">
-          {news.map((item) => (
-            <article key={item.slug} className="news-card" {...editable(`news:${item.slug}`, item.title)}>
-              <div className="news-card-media">
-                <img src={item.image} alt="" loading="lazy" decoding="async" />
-              </div>
-              <div className="news-card-body">
-                <h3>{item.title}</h3>
-                <p>{item.excerpt}</p>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-    </main>
+      <InstagramFeed />
+    </div>
   );
 }

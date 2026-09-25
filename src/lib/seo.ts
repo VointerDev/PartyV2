@@ -3,7 +3,7 @@ import type { EventItem, Flashback } from "../data";
 export const SITE_NAME = "PartyHBG";
 export const SITE_URL = "https://partyhbg.se";
 export const DEFAULT_DESCRIPTION =
-  "Fest, klubb och studentkvällar i Helsingborg. Evenemang, gästlista, biljetter och flashbacks från NOISE, Tivoli, NOC och Kappa Bar.";
+  "Studentfester i Helsingborg — gästlista, biljetter och flashbacks från NOISE, Tivoli, NOC och Kappa Bar.";
 
 export function pageTitle(title: string) {
   return title.includes(SITE_NAME) ? title : `${title} · ${SITE_NAME}`;
@@ -51,7 +51,7 @@ export function eventJsonLd(event: EventItem) {
       "@type": "Offer",
       price: event.price.replace(/[^\d]/g, "") || "0",
       priceCurrency: "SEK",
-      url: "https://instagram.com/partyhbg",
+      url: "https://www.instagram.com/partyhbg/",
       availability: "https://schema.org/InStock",
     },
   };

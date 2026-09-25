@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #050505;
+  --color-bg: #000000;
   --color-fg: #ffffff;
   --color-muted: #9a9a9a;
   --color-line: #ffffff;
   --color-pink: #f16cb3;
   --color-neon: #f16cb3;
   --color-action: #f16cb3;
+  --color-lime: #f16cb3;
   --color-panel: #121212;
   --font-sans: "Poppins", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-display: "Anton", Impact, "Arial Narrow", sans-serif;
@@ -5096,4 +5097,877 @@ a.site-banner-text:hover .site-banner-cta {
   color: #f16cb3;
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+/* ========== SPARK / REFERENCE LAYOUT ========== */
+
+.spark-shell {
+  background: #000;
+  color: #fff;
+}
+
+.spark-home {
+  background: #000;
+  width: 100%;
+}
+
+/* —— Nav —— */
+.spark-nav {
+  left: 0;
+  right: 0;
+  z-index: 60;
+  padding-top: env(safe-area-inset-top);
+  pointer-events: none;
+}
+
+.spark-nav--overlay {
+  position: absolute;
+  top: 0;
+}
+
+.spark-nav--solid {
+  position: sticky;
+  top: 0;
+  background: #000;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.spark-nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 18px max(16px, env(safe-area-inset-right)) 14px max(16px, env(safe-area-inset-left));
+  pointer-events: auto;
+}
+
+@media (min-width: 768px) {
+  .spark-nav-inner {
+    padding: 22px max(20px, env(safe-area-inset-right)) 16px max(20px, env(safe-area-inset-left));
+  }
+}
+
+.spark-nav-logo {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+  pointer-events: auto;
+}
+
+.spark-nav-logo:hover {
+  opacity: 0.8;
+}
+
+.spark-nav-logo-img {
+  display: block;
+  height: 28px;
+  width: auto;
+  max-width: 140px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+@media (min-width: 768px) {
+  .spark-nav-logo-img {
+    height: 34px;
+    max-width: 170px;
+  }
+}
+
+.spark-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.spark-menu-icon {
+  display: grid;
+  gap: 4px;
+  width: 18px;
+}
+
+.spark-menu-icon i {
+  display: block;
+  height: 1.5px;
+  background: #fff;
+  border-radius: 1px;
+}
+
+.spark-nav-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 16px 24px;
+}
+
+.spark-nav-link {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.spark-nav-link span {
+  opacity: 0.7;
+}
+
+.spark-nav-link:hover {
+  color: var(--color-pink);
+}
+
+.spark-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 18px;
+  padding: 80px max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left));
+  background: rgba(0, 0, 0, 0.96);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.spark-drawer.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.spark-drawer a {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 7vw, 52px);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  transition: color 0.15s ease;
+}
+
+.spark-drawer a:hover {
+  color: var(--color-pink);
+}
+
+/* —— Shared —— */
+.spark-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: var(--color-pink);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.spark-btn:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.spark-btn--ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+}
+
+.spark-btn--ghost:hover {
+  border-color: var(--color-pink);
+  color: var(--color-pink);
+  filter: none;
+}
+
+.spark-mark {
+  display: inline;
+  padding: 0 0.12em;
+  color: #fff;
+  white-space: nowrap;
+  background: linear-gradient(var(--color-pink), var(--color-pink)) no-repeat center / 100% 72%;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.spark-pill {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 28px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.spark-section-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(36px, 6vw, 64px);
+  font-weight: 400;
+  line-height: 0.95;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* —— Hero —— */
+.spark-hero {
+  position: relative;
+  width: 100%;
+  min-height: 100dvh;
+  display: grid;
+  align-items: stretch;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.spark-hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.spark-hero-media img,
+.spark-hero-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+}
+
+.spark-hero-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.25) 35%, rgba(0, 0, 0, 0.55) 70%, rgba(0, 0, 0, 0.82) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.15) 55%, rgba(0, 0, 0, 0.35) 100%);
+  pointer-events: none;
+}
+
+.spark-hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 28px;
+  width: 100%;
+  min-height: 100dvh;
+  padding:
+    calc(88px + env(safe-area-inset-top))
+    max(16px, env(safe-area-inset-right))
+    40px
+    max(16px, env(safe-area-inset-left));
+}
+
+@media (min-width: 768px) {
+  .spark-hero-content {
+    gap: 32px;
+    padding:
+      calc(100px + env(safe-area-inset-top))
+      max(20px, env(safe-area-inset-right))
+      48px
+      max(20px, env(safe-area-inset-left));
+  }
+}
+
+.spark-hero-title {
+  margin: 0;
+  max-width: none;
+  width: min(100%, 22ch);
+  font-family: var(--font-display);
+  font-size: clamp(44px, 8vw, 92px);
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  animation: spark-rise 0.7s ease both;
+}
+
+.spark-hero-content > .spark-btn {
+  align-self: flex-start;
+  animation: spark-rise 0.7s ease 0.12s both;
+}
+
+.spark-hero-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+  margin-top: auto;
+  padding-top: 48px;
+  animation: spark-rise 0.7s ease 0.22s both;
+}
+
+@keyframes spark-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 900px) {
+  .spark-hero-bottom {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 48px;
+  }
+}
+
+.spark-hero-lead {
+  margin: 0;
+  max-width: 28rem;
+  padding: 0;
+  background: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+@media (min-width: 768px) {
+  .spark-hero-lead {
+    font-size: 15px;
+  }
+}
+
+.spark-feature {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  transition: opacity 0.15s ease;
+}
+
+@media (min-width: 900px) {
+  .spark-feature {
+    justify-items: end;
+    text-align: right;
+    margin-left: auto;
+  }
+
+  .spark-avatars {
+    justify-content: flex-end;
+  }
+}
+
+.spark-feature:hover {
+  opacity: 0.88;
+}
+
+.spark-avatars {
+  display: flex;
+  align-items: center;
+}
+
+.spark-avatars img,
+.spark-avatars span {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  margin-left: -10px;
+  object-fit: cover;
+}
+
+.spark-avatars img:first-child,
+.spark-avatars span:first-child {
+  margin-left: 0;
+}
+
+.spark-avatars span {
+  display: grid;
+  place-items: center;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.spark-feature-meta {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.spark-feature-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* —— Venues —— */
+.spark-venues {
+  width: 100%;
+  padding: 72px max(16px, env(safe-area-inset-right)) 40px max(16px, env(safe-area-inset-left));
+  background: #000;
+}
+
+@media (min-width: 768px) {
+  .spark-venues {
+    padding: 96px max(20px, env(safe-area-inset-right)) 56px max(20px, env(safe-area-inset-left));
+  }
+}
+
+.spark-venues-grid {
+  display: grid;
+  gap: 40px;
+  width: 100%;
+}
+
+@media (min-width: 960px) {
+  .spark-venues-grid {
+    grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.15fr);
+    gap: 64px;
+    align-items: start;
+  }
+}
+
+.spark-venues-left {
+  display: grid;
+  gap: 20px;
+}
+
+.spark-venues-photo {
+  overflow: hidden;
+  border-radius: 4px;
+  aspect-ratio: 4 / 5;
+  max-width: 420px;
+  width: 100%;
+  background: #111;
+}
+
+.spark-venues-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.spark-venues-copy {
+  margin: 0;
+  max-width: 28rem;
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.spark-venues-right {
+  display: grid;
+  gap: 32px;
+  justify-items: start;
+  width: 100%;
+}
+
+.spark-venue-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: grid;
+  gap: 10px;
+}
+
+.spark-venue-list button,
+.spark-venue-list a {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #4a4a4a;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.spark-venue-list button:hover,
+.spark-venue-list button.is-active,
+.spark-venue-list a:hover,
+.spark-venue-list a.is-active {
+  color: var(--color-pink);
+}
+
+.spark-venues-right > .spark-btn {
+  margin-top: 8px;
+  justify-self: end;
+}
+
+/* —— About —— */
+.spark-about {
+  width: 100%;
+  padding: 56px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left));
+  background: #000;
+}
+
+@media (min-width: 768px) {
+  .spark-about {
+    padding: 72px max(20px, env(safe-area-inset-right)) 32px max(20px, env(safe-area-inset-left));
+  }
+}
+
+.spark-about-grid {
+  display: grid;
+  gap: 28px;
+  width: 100%;
+}
+
+@media (min-width: 900px) {
+  .spark-about-grid {
+    grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+    gap: 48px;
+    align-items: center;
+  }
+}
+
+.spark-about-media {
+  overflow: hidden;
+  border-radius: 4px;
+  aspect-ratio: 5 / 4;
+  background: #111;
+}
+
+.spark-about-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.spark-about-body {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+}
+
+.spark-about-copy {
+  margin: 0;
+  max-width: 36rem;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.spark-about-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* —— Instagram —— */
+.spark-instagram {
+  width: 100%;
+  padding: 56px 0 88px;
+  background: #000;
+}
+
+.spark-instagram-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
+}
+
+@media (min-width: 768px) {
+  .spark-instagram-head {
+    padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
+  }
+}
+
+.spark-instagram-head .spark-pill {
+  margin-bottom: 14px;
+}
+
+.spark-ig-sub {
+  margin: 10px 0 0;
+  max-width: 28rem;
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.spark-ig-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  width: 100%;
+}
+
+@media (min-width: 700px) {
+  .spark-ig-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+}
+
+@media (min-width: 1100px) {
+  .spark-ig-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+}
+
+.spark-ig-cell {
+  display: block;
+  overflow: hidden;
+  background: #111;
+  aspect-ratio: 1;
+}
+
+.spark-ig-cell img,
+.spark-ig-cell video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.spark-ig-cell:hover img,
+.spark-ig-cell:hover video {
+  transform: scale(1.04);
+  opacity: 0.88;
+}
+
+.spark-ig-cell--skeleton {
+  background: linear-gradient(90deg, #141414 0%, #1c1c1c 50%, #141414 100%);
+  background-size: 200% 100%;
+  animation: spark-ig-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes spark-ig-shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+.spark-ig-widget {
+  width: 100%;
+  min-height: 280px;
+}
+
+.spark-ig-widget behold-widget,
+.spark-ig-widget > * {
+  display: block;
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.spark-ig-setup {
+  margin: 0 0 28px;
+  padding: 20px max(16px, env(safe-area-inset-right)) 20px max(16px, env(safe-area-inset-left));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 14px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+@media (min-width: 768px) {
+  .spark-ig-setup {
+    margin-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
+    padding-inline: 24px;
+  }
+}
+
+.spark-ig-setup-title {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.spark-ig-setup ol {
+  margin: 0 0 14px;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 8px;
+}
+
+.spark-ig-setup a {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.spark-ig-setup a:hover {
+  color: var(--color-pink);
+}
+
+.spark-ig-setup pre {
+  margin: 12px 0;
+  padding: 12px 14px;
+  overflow-x: auto;
+  background: #111;
+  color: var(--color-pink);
+  font-size: 13px;
+}
+
+.spark-ig-setup code {
+  color: var(--color-pink);
+  font-size: 13px;
+}
+
+/* —— Footer —— */
+.spark-footer {
+  flex-shrink: 0;
+  width: 100%;
+  background: #000;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.spark-footer-inner {
+  display: grid;
+  gap: 28px;
+  width: 100%;
+  padding: 72px max(16px, env(safe-area-inset-right)) 32px max(16px, env(safe-area-inset-left));
+}
+
+@media (min-width: 768px) {
+  .spark-footer-inner {
+    gap: 32px;
+    padding: 96px max(20px, env(safe-area-inset-right)) 40px max(20px, env(safe-area-inset-left));
+  }
+}
+
+.spark-footer-logo-link {
+  display: inline-flex;
+  width: fit-content;
+  transition: opacity 0.15s ease;
+}
+
+.spark-footer-logo-link:hover {
+  opacity: 0.8;
+}
+
+.spark-footer-logo {
+  display: block;
+  height: 36px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  object-position: left center;
+}
+
+@media (min-width: 768px) {
+  .spark-footer-logo {
+    height: 42px;
+    max-width: 180px;
+  }
+}
+
+.spark-footer-title {
+  max-width: 14ch;
+}
+
+.spark-footer-row {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+@media (min-width: 900px) {
+  .spark-footer-row {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 48px;
+  }
+}
+
+.spark-footer-lead {
+  margin: 0;
+  max-width: 28rem;
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.spark-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  align-items: center;
+}
+
+@media (min-width: 900px) {
+  .spark-footer-nav {
+    justify-content: flex-end;
+  }
+}
+
+.spark-footer-nav a {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.spark-footer-nav a:hover {
+  color: var(--color-pink);
+}
+
+.spark-footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.spark-footer-copy {
+  margin: 12px 0 0;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 640px) {
+  .spark-nav-right {
+    gap: 10px 14px;
+  }
+
+  .spark-nav-link {
+    font-size: 12px;
+  }
+
+  .spark-nav-logo-img {
+    height: 24px;
+    max-width: 110px;
+  }
 }

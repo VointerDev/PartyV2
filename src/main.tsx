@@ -1,23 +1,28 @@
 import { StrictMode, Suspense, lazy } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+  useParams,
+} from "react-router-dom";
 import { AdminApp } from "./admin/AdminApp";
 import { App } from "./App";
 import "./index.css";
-import { EventSlugRedirect, FlashbackSlugRedirect } from "./pages/Redirects";
 
 const Home = lazy(() => import("./pages/Home").then((m) => ({ default: m.Home })));
-const Events = lazy(() => import("./pages/Events").then((m) => ({ default: m.Events })));
-const EventDetail = lazy(() => import("./pages/EventDetail").then((m) => ({ default: m.EventDetail })));
 const Flashback = lazy(() => import("./pages/Flashback").then((m) => ({ default: m.Flashback })));
 const FlashbackGallery = lazy(() =>
   import("./pages/Flashback").then((m) => ({ default: m.FlashbackGallery })),
 );
-const About = lazy(() => import("./pages/About").then((m) => ({ default: m.About })));
-const NotFound = lazy(() => import("./pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 function PageFallback() {
   return <div className="page page-fallback" aria-hidden="true" />;
+}
+
+function RedirectToFlashbackSlug() {
+  const { slug } = useParams();
+  return <Navigate to={`/flashback/${slug ?? ""}`} replace />;
 }
 
 const router = createBrowserRouter([
@@ -37,22 +42,8 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: "events",
-        element: (
-          <Suspense fallback={<PageFallback />}>
-            <Events />
-          </Suspense>
-        ),
-      },
-      {
-        path: "events/:slug",
-        element: (
-          <Suspense fallback={<PageFallback />}>
-            <EventDetail />
-          </Suspense>
-        ),
-      },
+      { path: "events", element: <Navigate to="/" replace /> },
+      { path: "events/:slug", element: <Navigate to="/" replace /> },
       {
         path: "flashback",
         element: (
@@ -69,29 +60,15 @@ const router = createBrowserRouter([
           </Suspense>
         ),
       },
-      {
-        path: "about",
-        element: (
-          <Suspense fallback={<PageFallback />}>
-            <About />
-          </Suspense>
-        ),
-      },
-      { path: "evenemang", element: <Navigate to="/events" replace /> },
-      { path: "evenemang/:slug", element: <EventSlugRedirect /> },
+      { path: "about", element: <Navigate to="/" replace /> },
+      { path: "evenemang", element: <Navigate to="/" replace /> },
+      { path: "evenemang/:slug", element: <Navigate to="/" replace /> },
       { path: "vimmelbilder", element: <Navigate to="/flashback" replace /> },
-      { path: "vimmelbilder/:slug", element: <FlashbackSlugRedirect /> },
-      { path: "om", element: <Navigate to="/about" replace /> },
-      { path: "residents", element: <Navigate to="/about" replace /> },
+      { path: "vimmelbilder/:slug", element: <RedirectToFlashbackSlug /> },
+      { path: "om", element: <Navigate to="/" replace /> },
+      { path: "residents", element: <Navigate to="/" replace /> },
       { path: "news", element: <Navigate to="/" replace /> },
-      {
-        path: "*",
-        element: (
-          <Suspense fallback={<PageFallback />}>
-            <NotFound />
-          </Suspense>
-        ),
-      },
+      { path: "*", element: <Navigate to="/" replace /> },
     ],
   },
 ]);

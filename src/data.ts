@@ -357,7 +357,7 @@ export const newsItems: NewsItem[] = [
     tag: "Helsingborg",
     title: "Lönelördag är tillbaka på NOISE",
     excerpt:
-      "Skånes klassiska pay-day-kväll rullar vidare — gästlista, residents och late night till 05.00.",
+      "Skånes klassiska paydaykväll rullar vidare. Gästlista, residents och late night till 05.00.",
     image: cercinoPhotos.crowd,
   },
   {
