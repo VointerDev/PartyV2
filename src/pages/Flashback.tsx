@@ -294,57 +294,62 @@ export function Flashback() {
   const { flashbacks } = usePublishedEvents();
 
   return (
-    <section className="page flashback-page street-section">
+    <div className="spark-flashback">
       <PageMeta
-        title="Flashback — bilder från fester i Helsingborg"
-        description="Flashbacks och vimmelbilder från tidigare evenemang i Helsingborg. Se bilder från studentfester, klubb och nattliv."
+        title="Flashback — bilder från studentfester i Helsingborg"
+        description="Flashbacks och vimmelbilder från studentfester i Helsingborg. Se bilder från NOISE, Tivoli, NOC och Kappa Bar."
         path="/flashback"
       />
 
-      <div className="page-hero-banner">
-        <h1 className="glow-title glow-title--xl">Flashback</h1>
-        <p className="page-hero-copy">Bilder från nätter som redan brunnit. Scrolla, öppna, spara.</p>
-      </div>
+      <header className="spark-flashback-head">
+        <h1 className="spark-section-title">
+          Flash<span className="spark-mark">back</span>
+        </h1>
+        <p className="spark-flashback-lead">
+          Bilder från nätter som redan brunnit. Öppna en fest och spara dina favoriter.
+        </p>
+      </header>
 
-      <div className="flashback-rules">
-        <div className="rules-nav flashback-index">
-          {flashbacks.map((item, i) => (
-            <Link
-              key={item.slug}
-              to={`/flashback/${item.slug}`}
-              className={i === 0 ? "rules-nav-item is-hot" : "rules-nav-item"}
-            >
-              <span>
-                {item.title}
-                <small>
-                  {item.venue} · {item.count} bilder · {eventYear(item.date)}
-                </small>
+      <ul className="spark-flashback-index">
+        {flashbacks.map((item) => (
+          <li key={item.slug}>
+            <Link to={`/flashback/${item.slug}`} className="spark-flashback-index-link">
+              <span className="spark-flashback-index-title">{item.title}</span>
+              <span className="spark-flashback-index-meta">
+                {item.venue} · {item.count} bilder · {eventYear(item.date)}
               </span>
-              <span aria-hidden="true">→</span>
+              <span className="spark-flashback-index-arrow" aria-hidden="true">
+                →
+              </span>
             </Link>
-          ))}
-        </div>
-      </div>
+          </li>
+        ))}
+      </ul>
 
-      <div className="flashback-grid">
+      <div className="spark-flashback-covers">
         {flashbacks.map((item) => (
           <Link
             key={item.slug}
             to={`/flashback/${item.slug}`}
-            className="flashback-card"
+            className="spark-flashback-cover"
             {...editable(`flashback:${item.slug}`, item.title)}
           >
-            <img src={item.cover} alt={`${item.title} på ${item.venue} i Helsingborg`} loading="lazy" decoding="async" />
-            <div className="flashback-card-meta">
+            <img
+              src={item.cover}
+              alt={`${item.title} på ${item.venue} i Helsingborg`}
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="spark-flashback-cover-meta">
               <p>{item.title}</p>
               <p>
-                {item.venue} · {item.count} bilder · {agendaDate(item.date)}
+                {item.venue} · {agendaDate(item.date)}
               </p>
             </div>
           </Link>
         ))}
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -369,8 +374,8 @@ export function FlashbackGallery() {
   if (!gallery) return <NotFound />;
 
   return (
-    <article
-      className="page flashback-gallery-page street-section"
+    <div
+      className="spark-flashback"
       {...editable(`flashback:${gallery.slug}`, gallery.title)}
     >
       <PageMeta
@@ -380,29 +385,35 @@ export function FlashbackGallery() {
         image={gallery.cover}
       />
 
-      <Link to="/flashback" className="detail-back-link">
-        ← Alla flashbacks
-      </Link>
+      <header className="spark-flashback-hero">
+        <div className="spark-flashback-hero-media" aria-hidden="true">
+          <img src={gallery.cover} alt="" />
+        </div>
+        <div className="spark-flashback-hero-veil" aria-hidden="true" />
+        <div className="spark-flashback-hero-content">
+          <h1 className="spark-flashback-hero-title">{gallery.title}</h1>
+          <div className="spark-flashback-chips">
+            <span>{gallery.venue}</span>
+            <span>{gallery.count} bilder</span>
+            <span>{agendaDate(gallery.date)}</span>
+          </div>
+        </div>
+      </header>
 
-      <div className="page-hero-banner">
-        <h1 className="glow-title">{gallery.title}</h1>
-        <p className="page-hero-copy">
-          {gallery.venue} · {gallery.count} bilder · {agendaDate(gallery.date)}
-        </p>
-      </div>
-
-      <div className="flashback-photos">
+      <div className="spark-flashback-photos">
         {gallery.photos.map((src, i) => (
-          <button key={src + i} type="button" onClick={() => setActiveIndex(i)} className="flashback-photo">
-            <span className="flashback-polaroid">
-              <img
-                src={src}
-                alt={`${gallery.title} bild ${i + 1}`}
-                loading={i > 3 ? "lazy" : "eager"}
-                decoding="async"
-              />
-              <span className="flashback-polaroid-caption">{gallery.title}</span>
-            </span>
+          <button
+            key={src + i}
+            type="button"
+            onClick={() => setActiveIndex(i)}
+            className="spark-flashback-photo"
+          >
+            <img
+              src={src}
+              alt={`${gallery.title} bild ${i + 1}`}
+              loading={i > 3 ? "lazy" : "eager"}
+              decoding="async"
+            />
           </button>
         ))}
       </div>
@@ -410,6 +421,6 @@ export function FlashbackGallery() {
       {activeIndex !== null ? (
         <Lightbox gallery={gallery} activeIndex={activeIndex} onClose={close} onPrev={prev} onNext={next} />
       ) : null}
-    </article>
+    </div>
   );
 }

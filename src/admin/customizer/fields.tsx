@@ -165,6 +165,148 @@ export function ImageField({
   );
 }
 
+export function PhotosField({
+  label,
+  value,
+  onChange,
+  hint,
+  field,
+}: {
+  label: string;
+  value: string[];
+  onChange: (photos: string[]) => void;
+  hint?: string;
+  field?: string;
+}) {
+  const input = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  async function importFiles(files: FileList | File[]) {
+    const list = [...files].filter((file) => file.type.startsWith("image/"));
+    if (!list.length) {
+      setError("Inga bildfiler valda.");
+      return;
+    }
+
+    setBusy(true);
+    setError(null);
+    const next = [...value];
+
+    try {
+      for (let i = 0; i < list.length; i += 1) {
+        setProgress(`Laddar ${i + 1}/${list.length}…`);
+        next.push(await fileToCompressedDataUrl(list[i], 1200, 0.72));
+      }
+      onChange(next);
+      setProgress(`${list.length} bilder tillagda.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Uppladdningen misslyckades.");
+      setProgress(null);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function removeAt(index: number) {
+    onChange(value.filter((_, i) => i !== index));
+  }
+
+  function clearAll() {
+    if (!value.length) return;
+    if (!confirm(`Ta bort alla ${value.length} bilder?`)) return;
+    onChange([]);
+    setProgress(null);
+  }
+
+  return (
+    <div className="cz-field" data-cz-field={field}>
+      <span className="cz-field-label">{label}</span>
+
+      <div
+        className={`cz-photos-drop ${dragOver ? "is-over" : ""} ${busy ? "is-busy" : ""}`}
+        onDragEnter={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+        }}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          if (e.dataTransfer.files?.length) void importFiles(e.dataTransfer.files);
+        }}
+      >
+        <p className="cz-photos-drop-title">
+          {busy ? progress || "Laddar…" : "Släpp bilder här eller ladda upp flera"}
+        </p>
+        <p className="cz-photos-drop-sub">JPG, PNG, WEBP — flera filer samtidigt</p>
+        <div className="cz-image-actions">
+          <button
+            type="button"
+            className="cz-button cz-button--small"
+            disabled={busy}
+            onClick={() => input.current?.click()}
+          >
+            {busy ? "Laddar…" : "Massimportera"}
+          </button>
+          {value.length ? (
+            <button type="button" className="cz-text-button" disabled={busy} onClick={clearAll}>
+              Rensa alla
+            </button>
+          ) : null}
+        </div>
+      </div>
+
+      {value.length ? (
+        <div className="cz-photos-grid">
+          {value.map((src, index) => (
+            <div key={`${index}-${src.slice(0, 24)}`} className="cz-photos-item">
+              <img src={src} alt="" />
+              <button
+                type="button"
+                className="cz-photos-remove"
+                aria-label={`Ta bort bild ${index + 1}`}
+                onClick={() => removeAt(index)}
+              >
+                ×
+              </button>
+              {index === 0 ? <span className="cz-photos-badge">Omslag</span> : null}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="cz-photos-empty">Inga bilder ännu.</p>
+      )}
+
+      {error ? <em className="cz-field-hint cz-field-hint--error">{error}</em> : null}
+      {!error && (progress || hint) ? (
+        <em className="cz-field-hint">{progress || hint}</em>
+      ) : null}
+
+      <input
+        ref={input}
+        type="file"
+        accept="image/*"
+        multiple
+        hidden
+        onChange={(e) => {
+          if (e.target.files?.length) void importFiles(e.target.files);
+          e.target.value = "";
+        }}
+      />
+    </div>
+  );
+}
+
 export function Toggle({
   label,
   checked,

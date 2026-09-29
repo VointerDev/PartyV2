@@ -1,15 +1,24 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { PageMeta } from "../components/PageMeta";
 import { InstagramFeed } from "../components/InstagramFeed";
+import { SiteBanner } from "../components/SiteBanner";
 import { usePublishedEvents } from "../lib/usePublishedEvents";
 import { DEFAULT_DESCRIPTION } from "../lib/seo";
 import { INSTAGRAM_URL } from "../lib/instagram";
+import { editable } from "../lib/previewBridge";
 import type { Flashback } from "../data";
 
 const AVATARS = ["/photos/dj.jpg", "/photos/crowd.jpg", "/photos/dance.jpg"];
-
 const FALLBACK_VENUES = ["HETCH", "Campus"];
+const DEFAULT_HERO_TITLE =
+  "Upptäck studentfesten [[genom nätter]] som sätter Helsingborg i rörelse";
+
+function resolveHeroTitle(raw: string) {
+  const title = raw.trim();
+  if (!title || /^partyhbg$/i.test(title)) return DEFAULT_HERO_TITLE;
+  return title;
+}
 
 function venueKey(venue: string) {
   return venue.trim().toLowerCase();
@@ -24,6 +33,46 @@ function latestFlashbackByVenue(flashbacks: Flashback[]) {
   }
 
   return map;
+}
+
+/** Renders CMS hero title. Wrap highlighted words in [[like this]]. */
+function renderHeroTitle(title: string): ReactNode[] {
+  const parts = title.split(/(\[\[[\s\S]*?\]\])/g).filter(Boolean);
+  return parts.map((part, index) => {
+    const mark = part.match(/^\[\[([\s\S]*?)\]\]$/);
+    if (mark) {
+      return (
+        <span key={index} className="spark-mark">
+          {mark[1]}
+        </span>
+      );
+    }
+    return <span key={index}>{part}</span>;
+  });
+}
+
+function CtaLink({
+  to,
+  className,
+  children,
+}: {
+  to: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  if (!to.trim()) return null;
+  if (/^(https?:|mailto:|tel:)/.test(to)) {
+    return (
+      <a href={to} className={className} target="_blank" rel="noreferrer">
+        {children}
+      </a>
+    );
+  }
+  return (
+    <Link to={to} className={className}>
+      {children}
+    </Link>
+  );
 }
 
 type VenueEntry = {
@@ -74,6 +123,16 @@ export function Home() {
   const [activeVenue, setActiveVenue] = useState(0);
   const active = venues[activeVenue] ?? venues[0];
 
+  const heroTitle = resolveHeroTitle(site.heroTitle);
+  const heroStyle = {
+    "--spark-hero-title-size": `${site.heroTitleSize}px`,
+    "--spark-hero-title-max": `${site.heroTitleMaxWidth}px`,
+    "--spark-hero-height": `${site.heroHeight}vh`,
+  } as CSSProperties;
+
+  const showPrimary = Boolean(site.heroPrimaryLabel.trim());
+  const showSecondary = Boolean(site.heroSecondaryLabel.trim());
+
   return (
     <div className="spark-home">
       <PageMeta
@@ -82,8 +141,18 @@ export function Home() {
         path="/"
       />
 
-      <section className="spark-hero">
-        <div className="spark-hero-media" aria-hidden="true">
+      <SiteBanner site={site} />
+
+      <section
+        className={`spark-hero ${site.heroAlign === "center" ? "is-center" : ""}`}
+        style={heroStyle}
+        {...editable("site:hero", "Hero")}
+      >
+        <div
+          className="spark-hero-media"
+          aria-hidden="true"
+          {...editable("site:heroMedia", "Hero-media")}
+        >
           {site.heroVideo ? (
             <video
               key={site.heroVideo}
@@ -103,10 +172,28 @@ export function Home() {
         <div className="spark-hero-veil" aria-hidden="true" />
 
         <div className="spark-hero-content">
-          <h1 className="spark-hero-title">
-            Upptäck studentfesten{" "}
-            <span className="spark-mark">genom nätter</span> som sätter Helsingborg i rörelse
+          <h1 className="spark-hero-title" {...editable("site:heroTitle", "Hero-rubrik")}>
+            {renderHeroTitle(heroTitle)}
           </h1>
+
+          {showPrimary || showSecondary ? (
+            <div className="spark-hero-actions">
+              {showPrimary ? (
+                <span {...editable("site:heroPrimary", "Hero-knapp 1")}>
+                  <CtaLink to={site.heroPrimaryLink} className="spark-btn">
+                    {site.heroPrimaryLabel} <span aria-hidden="true">↗</span>
+                  </CtaLink>
+                </span>
+              ) : null}
+              {showSecondary ? (
+                <span {...editable("site:heroSecondary", "Hero-knapp 2")}>
+                  <CtaLink to={site.heroSecondaryLink} className="spark-btn spark-btn--ghost">
+                    {site.heroSecondaryLabel}
+                  </CtaLink>
+                </span>
+              ) : null}
+            </div>
+          ) : null}
 
           <div className="spark-hero-bottom">
             <p className="spark-hero-lead">
@@ -129,7 +216,7 @@ export function Home() {
         </div>
       </section>
 
-      <section className="spark-venues" id="scener">
+      <section className="spark-venues" id="scener" {...editable("site:upcoming", "Scener")}>
         <div className="spark-venues-grid">
           <div className="spark-venues-left">
             <div className="spark-venues-photo">

@@ -60,7 +60,6 @@ export function InstagramFeed() {
       <div className="spark-instagram-head">
         <div>
           <h2 className="spark-section-title">{INSTAGRAM_HANDLE}</h2>
-          <p className="spark-ig-sub">När vi lägger upp på Instagram syns inläggen här.</p>
         </div>
         <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="spark-btn">
           Öppna Instagram <span aria-hidden="true">↗</span>

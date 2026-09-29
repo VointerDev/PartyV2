@@ -171,20 +171,20 @@ export function AdminCustomizer() {
       title: "Startsida & hero",
       sub: "Banner, hero, rubriker",
       path: "/",
-      scroll: ".home-hero",
+      scroll: ".spark-hero",
     },
     {
       id: "events",
       title: "Biljetter",
       sub: `${draft.events.length} fester`,
-      path: "/events",
+      path: "/",
     },
     {
       id: "news",
       title: "Nyheter",
       sub: `${draft.news.length} inlägg`,
       path: "/",
-      scroll: ".home-news",
+      scroll: ".spark-instagram",
     },
     {
       id: "flashbacks",

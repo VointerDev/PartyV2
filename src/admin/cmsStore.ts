@@ -72,17 +72,17 @@ export const CMS_STORAGE_KEY = "partyhbg_admin_cms";
 export const CMS_UPDATED_EVENT = "partyhbg-cms-updated";
 
 const defaultSite: CmsSiteSettings = {
-  heroTitle: "PartyHBG",
+  heroTitle: "Upptäck studentfesten [[genom nätter]] som sätter Helsingborg i rörelse",
   heroVideo: "/videos/party.mp4",
   heroPoster: "/photos/party.jpg",
-  heroPrimaryLabel: "Se evenemang",
-  heroPrimaryLink: "/events",
-  heroSecondaryLabel: "Flashback",
+  heroPrimaryLabel: "",
+  heroPrimaryLink: "/#scener",
+  heroSecondaryLabel: "",
   heroSecondaryLink: "/flashback",
   heroTitleSize: 72,
   heroTitleMaxWidth: 900,
   heroAlign: "left",
-  heroHeight: 56,
+  heroHeight: 100,
   contentMaxWidth: 1600,
   sectionTitleSize: 40,
   upcomingTitle: "Kommande Fester",
@@ -139,11 +139,17 @@ function clampNum(value: unknown, min: number, max: number, fallback: number) {
 
 function normalizeSite(raw: Partial<CmsSiteSettings> | undefined): CmsSiteSettings {
   const merged = { ...defaultSite, ...(raw ?? {}) };
+  const heroTitle =
+    !merged.heroTitle?.trim() || /^partyhbg$/i.test(merged.heroTitle.trim())
+      ? defaultSite.heroTitle
+      : merged.heroTitle;
+
   return {
     ...merged,
+    heroTitle,
     heroTitleSize: clampNum(merged.heroTitleSize, 28, 120, defaultSite.heroTitleSize),
     heroTitleMaxWidth: clampNum(merged.heroTitleMaxWidth, 320, 1600, defaultSite.heroTitleMaxWidth),
-    heroHeight: clampNum(merged.heroHeight, 32, 90, defaultSite.heroHeight),
+    heroHeight: clampNum(merged.heroHeight, 32, 100, defaultSite.heroHeight),
     contentMaxWidth: clampNum(merged.contentMaxWidth, 720, 1920, defaultSite.contentMaxWidth),
     sectionTitleSize: clampNum(merged.sectionTitleSize, 24, 56, defaultSite.sectionTitleSize),
     heroAlign: merged.heroAlign === "center" ? "center" : "left",

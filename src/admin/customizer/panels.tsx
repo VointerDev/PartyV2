@@ -7,7 +7,7 @@ import {
   type CmsNews,
   type CmsState,
 } from "../cmsStore";
-import { ImageField, TextAreaField, TextField, ColorField, SelectField, RangeField, Toggle } from "./fields";
+import { ImageField, PhotosField, TextAreaField, TextField, ColorField, SelectField, RangeField, Toggle } from "./fields";
 
 export type PanelProps = {
   draft: CmsState;
@@ -155,6 +155,7 @@ export function SitePanel({ draft, update, goTo }: PanelProps) {
         field="heroTitle"
         value={site.heroTitle}
         onChange={(heroTitle) => setSite({ heroTitle })}
+        hint="Markera text med [[dubbla hakparenteser]] för rosa highlight."
       />
       <RangeField
         label="Rubrikstorlek"
@@ -191,7 +192,7 @@ export function SitePanel({ draft, update, goTo }: PanelProps) {
           value={site.heroHeight}
           onChange={(heroHeight) => setSite({ heroHeight })}
           min={32}
-          max={90}
+          max={100}
           unit="vh"
         />
       </div>
@@ -581,12 +582,12 @@ function FlashbackEditor({ draft, update, editingId, setEditingId, goTo }: Panel
     }));
   }
 
-  function setPhotos(text: string) {
-    const photos = text
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean);
-    patch({ photos, count: photos.length, cover: item!.cover || photos[0] || "" });
+  function setPhotos(photos: string[]) {
+    patch({
+      photos,
+      count: photos.length,
+      cover: item!.cover || photos[0] || "",
+    });
   }
 
   function remove() {
@@ -607,12 +608,11 @@ function FlashbackEditor({ draft, update, editingId, setEditingId, goTo }: Panel
         <TextField label="Datum" type="date" value={item.date} onChange={(date) => patch({ date })} />
       </div>
       <ImageField label="Omslag" value={item.cover} onChange={(cover) => patch({ cover })} />
-      <TextAreaField
+      <PhotosField
         label="Bilder"
-        rows={8}
-        value={item.photos.join("\n")}
+        value={item.photos}
         onChange={setPhotos}
-        hint={`${item.count} bilder — en URL per rad.`}
+        hint={`${item.photos.length} bilder — ladda upp flera samtidigt eller dra in dem.`}
       />
       <TextField
         label="Kopplad fest (slug)"
