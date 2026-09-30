@@ -11,6 +11,8 @@ import type { Flashback } from "../data";
 
 const AVATARS = ["/photos/dj.jpg", "/photos/crowd.jpg", "/photos/dance.jpg"];
 const FALLBACK_VENUES = ["HETCH", "Campus"];
+/** Set to true to show the venues / scener block again. */
+const SHOW_VENUES = false;
 const DEFAULT_HERO_TITLE =
   "Upptäck studentfesten [[genom nätter]] som sätter Helsingborg i rörelse";
 
@@ -85,6 +87,7 @@ export function Home() {
   const { site, flashbacks } = usePublishedEvents();
 
   const venues = useMemo(() => {
+    if (!SHOW_VENUES) return [] as VenueEntry[];
     const byVenue = latestFlashbackByVenue(flashbacks);
     const entries: VenueEntry[] = [];
     const seen = new Set<string>();
@@ -216,59 +219,61 @@ export function Home() {
         </div>
       </section>
 
-      <section className="spark-venues" id="scener" {...editable("site:upcoming", "Scener")}>
-        <div className="spark-venues-grid">
-          <div className="spark-venues-left">
-            <div className="spark-venues-photo">
-              <img
-                key={active?.cover}
-                src={active?.cover || "/photos/club.jpg"}
-                alt={active ? `Flashback från ${active.label}` : "Klubbscen i Helsingborg"}
-              />
+      {SHOW_VENUES ? (
+        <section className="spark-venues" id="scener" {...editable("site:upcoming", "Scener")}>
+          <div className="spark-venues-grid">
+            <div className="spark-venues-left">
+              <div className="spark-venues-photo">
+                <img
+                  key={active?.cover}
+                  src={active?.cover || "/photos/club.jpg"}
+                  alt={active ? `Flashback från ${active.label}` : "Klubbscen i Helsingborg"}
+                />
+              </div>
+            </div>
+
+            <div className="spark-venues-right">
+              <ul className="spark-venue-list">
+                {venues.map((venue, i) => {
+                  const isActive = i === activeVenue;
+                  const className = isActive ? "is-active" : undefined;
+                  const label = (
+                    <>
+                      {venue.label}
+                      {isActive ? <span aria-hidden="true"> →</span> : null}
+                    </>
+                  );
+
+                  return (
+                    <li key={venue.label}>
+                      {venue.to ? (
+                        <Link
+                          to={venue.to}
+                          className={className}
+                          onMouseEnter={() => setActiveVenue(i)}
+                          onFocus={() => setActiveVenue(i)}
+                        >
+                          {label}
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          className={className}
+                          onMouseEnter={() => setActiveVenue(i)}
+                          onFocus={() => setActiveVenue(i)}
+                          onClick={() => setActiveVenue(i)}
+                        >
+                          {label}
+                        </button>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
-
-          <div className="spark-venues-right">
-            <ul className="spark-venue-list">
-              {venues.map((venue, i) => {
-                const isActive = i === activeVenue;
-                const className = isActive ? "is-active" : undefined;
-                const label = (
-                  <>
-                    {venue.label}
-                    {isActive ? <span aria-hidden="true"> →</span> : null}
-                  </>
-                );
-
-                return (
-                  <li key={venue.label}>
-                    {venue.to ? (
-                      <Link
-                        to={venue.to}
-                        className={className}
-                        onMouseEnter={() => setActiveVenue(i)}
-                        onFocus={() => setActiveVenue(i)}
-                      >
-                        {label}
-                      </Link>
-                    ) : (
-                      <button
-                        type="button"
-                        className={className}
-                        onMouseEnter={() => setActiveVenue(i)}
-                        onFocus={() => setActiveVenue(i)}
-                        onClick={() => setActiveVenue(i)}
-                      >
-                        {label}
-                      </button>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <InstagramFeed />
     </div>
