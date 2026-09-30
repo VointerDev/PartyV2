@@ -46,80 +46,82 @@ export function Contact() {
         </p>
       </header>
 
-      <form className="spark-contact-form" onSubmit={onSubmit}>
-        <label className="spark-contact-field">
-          <span className="spark-contact-label">Namn</span>
-          <input
-            type="text"
-            name="name"
-            autoComplete="name"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Ditt namn"
-          />
-        </label>
+      <div className="spark-contact-body">
+        <form className="spark-contact-form" onSubmit={onSubmit}>
+          <label className="spark-contact-field">
+            <span className="spark-contact-label">Namn</span>
+            <input
+              type="text"
+              name="name"
+              autoComplete="name"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ditt namn"
+            />
+          </label>
 
-        <label className="spark-contact-field">
-          <span className="spark-contact-label">E-post</span>
-          <input
-            type="email"
-            name="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="namn@mail.se"
-          />
-        </label>
+          <label className="spark-contact-field">
+            <span className="spark-contact-label">E-post</span>
+            <input
+              type="email"
+              name="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="namn@mail.se"
+            />
+          </label>
 
-        <label className="spark-contact-field spark-contact-field--full">
-          <span className="spark-contact-label">Meddelande</span>
-          <textarea
-            name="message"
-            required
-            rows={6}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Vad vill du höra av dig om?"
-          />
-        </label>
+          <label className="spark-contact-field spark-contact-field--full">
+            <span className="spark-contact-label">Meddelande</span>
+            <textarea
+              name="message"
+              required
+              rows={6}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Vad vill du höra av dig om?"
+            />
+          </label>
 
-        <div className="spark-contact-form-actions">
-          <button type="submit" className="spark-btn">
-            Skicka meddelande
-          </button>
-          {sent ? (
-            <p className="spark-contact-form-note">
-              Öppnar din e-postapp — skicka därifrån för att nå oss.
-            </p>
-          ) : null}
-        </div>
-      </form>
+          <div className="spark-contact-form-actions">
+            <button type="submit" className="spark-btn">
+              Skicka meddelande
+            </button>
+            {sent ? (
+              <p className="spark-contact-form-note">
+                Öppnar din e-postapp — skicka därifrån för att nå oss.
+              </p>
+            ) : null}
+          </div>
+        </form>
 
-      <div className="spark-contact-grid">
-        <a href={`mailto:${EMAIL}`} className="spark-contact-item">
-          <span className="spark-contact-label">Mejl</span>
-          <span className="spark-contact-value">
-            {EMAIL} <span aria-hidden="true">↗</span>
-          </span>
-        </a>
+        <div className="spark-contact-grid">
+          <a href={`mailto:${EMAIL}`} className="spark-contact-item">
+            <span className="spark-contact-label">Mejl</span>
+            <span className="spark-contact-value">
+              {EMAIL} <span aria-hidden="true">↗</span>
+            </span>
+          </a>
 
-        <a
-          href={INSTAGRAM_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="spark-contact-item"
-        >
-          <span className="spark-contact-label">Instagram</span>
-          <span className="spark-contact-value">
-            {INSTAGRAM_HANDLE} <span aria-hidden="true">↗</span>
-          </span>
-        </a>
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="spark-contact-item"
+          >
+            <span className="spark-contact-label">Instagram</span>
+            <span className="spark-contact-value">
+              {INSTAGRAM_HANDLE} <span aria-hidden="true">↗</span>
+            </span>
+          </a>
 
-        <div className="spark-contact-item spark-contact-item--static">
-          <span className="spark-contact-label">Plats</span>
-          <span className="spark-contact-value">Helsingborg</span>
+          <div className="spark-contact-item spark-contact-item--static">
+            <span className="spark-contact-label">Plats</span>
+            <span className="spark-contact-value">Helsingborg</span>
+          </div>
         </div>
       </div>
     </div>

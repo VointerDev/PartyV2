@@ -5514,7 +5514,7 @@ a.site-banner-text:hover .site-banner-cta {
   width: 100%;
   min-height: 100dvh;
   padding:
-    calc(88px + env(safe-area-inset-top))
+    calc(132px + env(safe-area-inset-top))
     max(16px, env(safe-area-inset-right))
     40px
     max(16px, env(safe-area-inset-left));
@@ -5524,7 +5524,7 @@ a.site-banner-text:hover .site-banner-cta {
   .spark-hero-content {
     gap: 32px;
     padding:
-      calc(100px + env(safe-area-inset-top))
+      calc(160px + env(safe-area-inset-top))
       max(20px, env(safe-area-inset-right))
       48px
       max(20px, env(safe-area-inset-left));
@@ -6459,7 +6459,13 @@ a.site-banner-text:hover .site-banner-cta {
 
 @media (min-width: 768px) {
   .spark-contact {
-    padding: 72px max(20px, env(safe-area-inset-right)) 100px max(20px, env(safe-area-inset-left));
+    padding: 72px max(32px, env(safe-area-inset-right)) 100px max(32px, env(safe-area-inset-left));
+  }
+}
+
+@media (min-width: 1100px) {
+  .spark-contact {
+    padding: 88px max(48px, env(safe-area-inset-right)) 120px max(48px, env(safe-area-inset-left));
   }
 }
 
@@ -6467,8 +6473,20 @@ a.site-banner-text:hover .site-banner-cta {
   display: grid;
   gap: 16px;
   justify-items: start;
-  margin-bottom: 48px;
+  margin-bottom: 40px;
   max-width: 40rem;
+}
+
+@media (min-width: 960px) {
+  .spark-contact-head {
+    max-width: 48rem;
+    margin-bottom: 56px;
+  }
+
+  .spark-contact-lead {
+    font-size: 18px;
+    max-width: 36rem;
+  }
 }
 
 .spark-contact-eyebrow {
@@ -6487,16 +6505,30 @@ a.site-banner-text:hover .site-banner-cta {
   color: rgba(255, 255, 255, 0.68);
 }
 
+.spark-contact-body {
+  display: grid;
+  gap: 48px;
+  width: 100%;
+  max-width: 72rem;
+}
+
+@media (min-width: 960px) {
+  .spark-contact-body {
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 48px 64px;
+    align-items: start;
+  }
+}
+
 .spark-contact-form {
   display: grid;
   grid-template-columns: 1fr;
   gap: 18px;
   width: 100%;
-  max-width: 52rem;
-  margin-bottom: 56px;
+  margin-bottom: 0;
 }
 
-@media (min-width: 720px) {
+@media (min-width: 640px) {
   .spark-contact-form {
     grid-template-columns: 1fr 1fr;
     gap: 20px 18px;
@@ -6531,6 +6563,12 @@ a.site-banner-text:hover .site-banner-cta {
 .spark-contact-field textarea {
   min-height: 160px;
   resize: vertical;
+}
+
+@media (min-width: 960px) {
+  .spark-contact-field textarea {
+    min-height: 200px;
+  }
 }
 
 .spark-contact-field input::placeholder,
@@ -6569,9 +6607,19 @@ a.site-banner-text:hover .site-banner-cta {
   display: grid;
   gap: 0;
   width: 100%;
-  max-width: 52rem;
   margin-bottom: 0;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+@media (min-width: 960px) {
+  .spark-contact-grid {
+    border-top: 0;
+    padding-top: 2px;
+  }
+
+  .spark-contact-grid .spark-contact-item:first-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+  }
 }
 
 .spark-contact-item {
@@ -6601,10 +6649,17 @@ a.spark-contact-item:hover {
 
 .spark-contact-value {
   font-family: var(--font-display);
-  font-size: clamp(28px, 5vw, 44px);
+  font-size: clamp(24px, 3.4vw, 40px);
   font-weight: 400;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 960px) {
+  .spark-contact-value {
+    font-size: clamp(26px, 2.4vw, 36px);
+  }
 }
 
