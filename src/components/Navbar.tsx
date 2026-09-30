@@ -13,9 +13,6 @@ export function Navbar() {
         </Link>
 
         <nav className="spark-nav-right" aria-label="Huvudmeny">
-          <Link to="/flashback" className="spark-nav-link">
-            Flashback
-          </Link>
           <Link to="/kontakt" className="spark-nav-link">
             Kontakta oss
           </Link>

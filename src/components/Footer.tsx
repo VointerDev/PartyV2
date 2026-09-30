@@ -21,7 +21,6 @@ export function Footer() {
           </p>
 
           <nav className="spark-footer-nav" aria-label="Sidfot">
-            <Link to="/flashback">Flashback</Link>
             <a href="/#instagram">Instagram</a>
             <Link to="/kontakt">Kontakta oss</Link>
           </nav>

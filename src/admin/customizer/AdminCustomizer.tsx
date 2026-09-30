@@ -16,7 +16,6 @@ const devices: { id: Device; label: string; width: number | null }[] = [
 
 const pages = [
   { path: "/", label: "Hem" },
-  { path: "/flashback", label: "Flashback" },
   { path: "/kontakt", label: "Kontakt" },
 ];
 
