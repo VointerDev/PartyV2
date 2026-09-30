@@ -6447,3 +6447,90 @@ a.site-banner-text:hover .site-banner-cta {
   transform: scale(1.04);
   opacity: 0.9;
 }
+
+/* —— Contact —— */
+.spark-contact {
+  width: 100%;
+  min-height: calc(100dvh - 120px);
+  background: #000;
+  padding: 48px max(16px, env(safe-area-inset-right)) 80px max(16px, env(safe-area-inset-left));
+}
+
+@media (min-width: 768px) {
+  .spark-contact {
+    padding: 72px max(20px, env(safe-area-inset-right)) 100px max(20px, env(safe-area-inset-left));
+  }
+}
+
+.spark-contact-head {
+  display: grid;
+  gap: 16px;
+  justify-items: start;
+  margin-bottom: 48px;
+  max-width: 40rem;
+}
+
+.spark-contact-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-pink);
+}
+
+.spark-contact-lead {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.spark-contact-grid {
+  display: grid;
+  gap: 0;
+  width: 100%;
+  max-width: 52rem;
+  margin-bottom: 40px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.spark-contact-item {
+  display: grid;
+  gap: 8px;
+  padding: 22px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+  transition: color 0.15s ease;
+}
+
+a.spark-contact-item:hover {
+  color: var(--color-pink);
+}
+
+.spark-contact-item--static {
+  cursor: default;
+}
+
+.spark-contact-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.42);
+}
+
+.spark-contact-value {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5vw, 44px);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+
+.spark-contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

@@ -16,9 +16,9 @@ export function Navbar() {
           <Link to="/flashback" className="spark-nav-link">
             Flashback
           </Link>
-          <a href="mailto:hello@partyhbg.se" className="spark-nav-link">
+          <Link to="/kontakt" className="spark-nav-link">
             Kontakta oss
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

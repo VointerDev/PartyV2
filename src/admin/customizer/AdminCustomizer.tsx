@@ -16,9 +16,8 @@ const devices: { id: Device; label: string; width: number | null }[] = [
 
 const pages = [
   { path: "/", label: "Hem" },
-  { path: "/events", label: "Evenemang" },
   { path: "/flashback", label: "Flashback" },
-  { path: "/about", label: "Om oss" },
+  { path: "/kontakt", label: "Kontakt" },
 ];
 
 /** Maps a clicked region of the hero/home page to the field that controls it. */

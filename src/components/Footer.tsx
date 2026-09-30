@@ -23,7 +23,7 @@ export function Footer() {
           <nav className="spark-footer-nav" aria-label="Sidfot">
             <Link to="/flashback">Flashback</Link>
             <a href="/#instagram">Instagram</a>
-            <a href="mailto:hello@partyhbg.se">Kontakta oss</a>
+            <Link to="/kontakt">Kontakta oss</Link>
           </nav>
         </div>
 
@@ -31,9 +31,9 @@ export function Footer() {
           <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="spark-btn">
             Följ {INSTAGRAM_HANDLE} <span aria-hidden="true">↗</span>
           </a>
-          <a href="mailto:hello@partyhbg.se" className="spark-btn spark-btn--ghost">
+          <Link to="/kontakt" className="spark-btn spark-btn--ghost">
             Mejla oss
-          </a>
+          </Link>
         </div>
 
         <p className="spark-footer-copy">© {new Date().getFullYear()} PartyHBG</p>
