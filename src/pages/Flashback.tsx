@@ -171,10 +171,14 @@ function Lightbox({ gallery, activeIndex, onClose, onPrev, onNext }: LightboxPro
         </div>
 
         <footer className="lightbox-bar">
-          <p className="lightbox-counter">
-            {activeIndex + 1} / {gallery.photos.length}
-            <span>{gallery.title} · {gallery.venue}</span>
-          </p>
+          <div className="lightbox-meta">
+            <p className="lightbox-counter">
+              {activeIndex + 1} / {gallery.photos.length}
+            </p>
+            <p className="lightbox-title">
+              {gallery.title} · {gallery.venue}
+            </p>
+          </div>
 
           <div className="lightbox-actions">
             <label className="lightbox-toggle">
@@ -192,11 +196,11 @@ function Lightbox({ gallery, activeIndex, onClose, onPrev, onNext }: LightboxPro
             <div className="lightbox-download" ref={downloadRef}>
               <button
                 type="button"
-                className="lightbox-action"
+                className="lightbox-action lightbox-action--pink"
                 aria-expanded={downloadOpen}
                 onClick={() => setDownloadOpen((value) => !value)}
               >
-                Ladda ner ▾
+                Ladda ner
               </button>
               {downloadOpen ? (
                 <div className="lightbox-download-menu" role="dialog" aria-label="Nedladdningsalternativ">
@@ -279,7 +283,7 @@ function Lightbox({ gallery, activeIndex, onClose, onPrev, onNext }: LightboxPro
               ) : null}
             </div>
 
-            <button type="button" className="lightbox-action lightbox-action--pink" onClick={handleShare}>
+            <button type="button" className="lightbox-action" onClick={handleShare}>
               {shareLabel}
             </button>
           </div>
