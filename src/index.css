@@ -5299,17 +5299,17 @@ a.site-banner-text:hover .site-banner-cta {
 
 .spark-nav-logo-img {
   display: block;
-  height: 28px;
+  height: 44px;
   width: auto;
-  max-width: 140px;
+  max-width: 200px;
   object-fit: contain;
   object-position: left center;
 }
 
 @media (min-width: 768px) {
   .spark-nav-logo-img {
-    height: 34px;
-    max-width: 170px;
+    height: 56px;
+    max-width: 260px;
   }
 }
 
@@ -6125,8 +6125,8 @@ a.site-banner-text:hover .site-banner-cta {
   }
 
   .spark-nav-logo-img {
-    height: 24px;
-    max-width: 110px;
+    height: 36px;
+    max-width: 160px;
   }
 }
 
