@@ -2,7 +2,10 @@ import { useEffect, useState } from "react";
 import BeholdWidget from "@behold/react";
 import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from "../lib/instagram";
 
-const FEED_ID = (import.meta.env.VITE_BEHOLD_FEED_ID as string | undefined)?.trim();
+/** Public Behold feed for @partyhbg — override with VITE_BEHOLD_FEED_ID if needed. */
+const DEFAULT_FEED_ID = "dI80y5G0YZQI9oyo3Ha1";
+const FEED_ID =
+  (import.meta.env.VITE_BEHOLD_FEED_ID as string | undefined)?.trim() || DEFAULT_FEED_ID;
 
 type BeholdPost = {
   id: string;
