@@ -13,7 +13,7 @@ export function Navbar() {
         </Link>
 
         <nav className="spark-nav-right" aria-label="Huvudmeny">
-          <Link to="/kontakt" className="spark-nav-link">
+          <Link to="/kontakt" className="spark-btn">
             Kontakta oss
           </Link>
         </nav>

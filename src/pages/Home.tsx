@@ -5,7 +5,6 @@ import { InstagramFeed } from "../components/InstagramFeed";
 import { SiteBanner } from "../components/SiteBanner";
 import { usePublishedEvents } from "../lib/usePublishedEvents";
 import { DEFAULT_DESCRIPTION } from "../lib/seo";
-import { INSTAGRAM_URL } from "../lib/instagram";
 import { editable } from "../lib/previewBridge";
 import type { Flashback } from "../data";
 
@@ -199,22 +198,15 @@ export function Home() {
           ) : null}
 
           <div className="spark-hero-bottom">
-            <p className="spark-hero-lead">
-              Studentfester, klubbkvällar och lönelördagar — gästlista, biljetter och det som händer
-              efter midnatt. För dig som vill ut.
-            </p>
-
-            <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="spark-feature">
-              <div className="spark-avatars" aria-hidden="true">
-                {AVATARS.map((src) => (
-                  <img key={src} src={src} alt="" />
-                ))}
-                <span>+120</span>
-              </div>
-              <p className="spark-feature-title">
-                Lönelördag på NOISE <span aria-hidden="true">↗</span>
-              </p>
-            </a>
+            <div className="spark-avatars" aria-label="3000+ guests">
+              {AVATARS.map((src) => (
+                <img key={src} src={src} alt="" />
+              ))}
+              <span className="spark-avatars-count">
+                <strong>3000+</strong>
+                <em>guests</em>
+              </span>
+            </div>
           </div>
         </div>
       </section>
