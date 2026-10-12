@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import { isPastEvent } from "../../data";
 import {
+  emptyPage,
+  emptySection,
+  RESERVED_PAGE_SLUGS,
   slugify,
   type CmsEvent,
   type CmsFlashback,
   type CmsNews,
+  type CmsPage,
+  type CmsSection,
+  type CmsSectionType,
   type CmsState,
 } from "../cmsStore";
 import { ImageField, PhotosField, TextAreaField, TextField, ColorField, SelectField, RangeField, Toggle } from "./fields";
@@ -15,6 +21,7 @@ export type PanelProps = {
   editingId: string | null;
   setEditingId: (id: string | null) => void;
   goTo: (path: string) => void;
+  focusField?: string | null;
 };
 
 function today() {
@@ -292,6 +299,87 @@ export function SitePanel({ draft, update, goTo }: PanelProps) {
         value={site.newsTitle}
         onChange={(newsTitle) => setSite({ newsTitle })}
       />
+
+      <p className="cz-group-label">Sidfot</p>
+      <TextAreaField
+        label="Sidfotsrubrik"
+        field="footerTitle"
+        rows={2}
+        value={site.footerTitle}
+        onChange={(footerTitle) => setSite({ footerTitle })}
+        hint="Markera med [[så här]] för rosa bakgrund."
+      />
+      <TextAreaField
+        label="Sidfotstext"
+        field="footerLead"
+        rows={3}
+        value={site.footerLead}
+        onChange={(footerLead) => setSite({ footerLead })}
+      />
+
+      <p className="cz-group-label">Sidfotsknapp 1</p>
+      <div data-cz-field="footerPrimary">
+        <TextField
+          label="Text"
+          value={site.footerPrimaryLabel}
+          onChange={(footerPrimaryLabel) => setSite({ footerPrimaryLabel })}
+        />
+        <TextField
+          label="Länk"
+          value={site.footerPrimaryLink}
+          onChange={(footerPrimaryLink) => setSite({ footerPrimaryLink })}
+          placeholder="https://… eller /kontakt"
+        />
+        <div className="cz-row-2">
+          <ColorField
+            label="Bakgrund"
+            value={site.footerPrimaryBg}
+            onChange={(footerPrimaryBg) => setSite({ footerPrimaryBg })}
+          />
+          <ColorField
+            label="Textfärg"
+            value={site.footerPrimaryColor}
+            onChange={(footerPrimaryColor) => setSite({ footerPrimaryColor })}
+          />
+        </div>
+        <ColorField
+          label="Kantfärg"
+          value={site.footerPrimaryBorder}
+          onChange={(footerPrimaryBorder) => setSite({ footerPrimaryBorder })}
+        />
+      </div>
+
+      <p className="cz-group-label">Sidfotsknapp 2</p>
+      <div data-cz-field="footerSecondary">
+        <TextField
+          label="Text"
+          value={site.footerSecondaryLabel}
+          onChange={(footerSecondaryLabel) => setSite({ footerSecondaryLabel })}
+        />
+        <TextField
+          label="Länk"
+          value={site.footerSecondaryLink}
+          onChange={(footerSecondaryLink) => setSite({ footerSecondaryLink })}
+          placeholder="https://… eller /kontakt"
+        />
+        <div className="cz-row-2">
+          <ColorField
+            label="Bakgrund"
+            value={site.footerSecondaryBg}
+            onChange={(footerSecondaryBg) => setSite({ footerSecondaryBg })}
+          />
+          <ColorField
+            label="Textfärg"
+            value={site.footerSecondaryColor}
+            onChange={(footerSecondaryColor) => setSite({ footerSecondaryColor })}
+          />
+        </div>
+        <ColorField
+          label="Kantfärg"
+          value={site.footerSecondaryBorder}
+          onChange={(footerSecondaryBorder) => setSite({ footerSecondaryBorder })}
+        />
+      </div>
 
       <button type="button" className="cz-text-button" onClick={() => goTo("/")}>
         Visa startsidan i förhandsvisningen
@@ -673,6 +761,338 @@ export function FlashbacksPanel(props: PanelProps) {
           />
         ))}
       </div>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------- pages --- */
+
+const SECTION_TYPES: { value: CmsSectionType; label: string }[] = [
+  { value: "heading", label: "Rubrik" },
+  { value: "text", label: "Text" },
+  { value: "image", label: "Bild" },
+  { value: "buttons", label: "Knappar" },
+  { value: "spacer", label: "Mellanrum" },
+];
+
+function sectionMeta(section: CmsSection) {
+  const label = SECTION_TYPES.find((item) => item.value === section.type)?.label || section.type;
+  if (section.type === "heading") return `${label} · ${section.title || "utan text"}`;
+  if (section.type === "text") return `${label} · ${(section.body || "").slice(0, 40)}`;
+  if (section.type === "image") return `${label}`;
+  if (section.type === "buttons") return `${label} · ${section.primaryLabel || "knapp"}`;
+  return `${label} · ${section.height}px`;
+}
+
+function PageEditor({ draft, update, editingId, setEditingId, goTo, focusField }: PanelProps) {
+  const page = draft.pages.find((item) => item.id === editingId);
+  const [sectionId, setSectionId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setSectionId(null);
+  }, [editingId]);
+
+  useEffect(() => {
+    if (!focusField?.startsWith("page-section-")) return;
+    const id = focusField.replace(/^page-section-/, "");
+    if (page?.sections.some((item) => item.id === id)) setSectionId(id);
+  }, [focusField, page]);
+
+  if (!page) return null;
+
+  const section = page.sections.find((item) => item.id === sectionId) || null;
+
+  function patchPage(changes: Partial<CmsPage>) {
+    update((state) => ({
+      ...state,
+      pages: state.pages.map((item) => (item.id === editingId ? { ...item, ...changes } : item)),
+    }));
+  }
+
+  function patchSection(changes: Partial<CmsSection>) {
+    if (!sectionId) return;
+    update((state) => ({
+      ...state,
+      pages: state.pages.map((item) =>
+        item.id !== editingId
+          ? item
+          : {
+              ...item,
+              sections: item.sections.map((entry) =>
+                entry.id === sectionId ? { ...entry, ...changes } : entry,
+              ),
+            },
+      ),
+    }));
+  }
+
+  function addSection(type: CmsSectionType) {
+    const next = emptySection(type);
+    patchPage({ sections: [...page!.sections, next] });
+    setSectionId(next.id);
+  }
+
+  function moveSection(id: string, dir: -1 | 1) {
+    const list = [...page!.sections];
+    const index = list.findIndex((item) => item.id === id);
+    const target = index + dir;
+    if (index < 0 || target < 0 || target >= list.length) return;
+    const [item] = list.splice(index, 1);
+    list.splice(target, 0, item);
+    patchPage({ sections: list });
+  }
+
+  function removeSection(id: string) {
+    if (!confirm("Ta bort sektionen?")) return;
+    patchPage({ sections: page!.sections.filter((item) => item.id !== id) });
+    if (sectionId === id) setSectionId(null);
+  }
+
+  function removePage() {
+    if (!confirm(`Ta bort sidan "${page!.title}"?`)) return;
+    update((state) => ({
+      ...state,
+      pages: state.pages.filter((item) => item.id !== editingId),
+    }));
+    setEditingId(null);
+    goTo("/");
+  }
+
+  function setSlug(value: string) {
+    const next = slugify(value);
+    if (!next || RESERVED_PAGE_SLUGS.has(next)) return;
+    const taken = draft.pages.some((item) => item.id !== page!.id && item.slug === next);
+    if (taken) return;
+    patchPage({ slug: next });
+    goTo(`/${next}`);
+  }
+
+  if (section) {
+    return (
+      <div className="cz-form">
+        <button type="button" className="cz-text-button" onClick={() => setSectionId(null)}>
+          ‹ Tillbaka till sidans sektioner
+        </button>
+
+        <SelectField
+          label="Typ"
+          value={section.type}
+          onChange={(type) => patchSection({ type: type as CmsSectionType })}
+          options={SECTION_TYPES}
+        />
+        <SelectField
+          label="Justering"
+          value={section.align}
+          onChange={(align) => patchSection({ align: align as "left" | "center" })}
+          options={[
+            { value: "left", label: "Vänster" },
+            { value: "center", label: "Centrerad" },
+          ]}
+        />
+
+        {section.type === "heading" ? (
+          <TextAreaField
+            label="Rubrik"
+            field={`page-section-${section.id}-title`}
+            rows={2}
+            value={section.title}
+            onChange={(title) => patchSection({ title })}
+            hint="Markera med [[så här]] för rosa bakgrund."
+          />
+        ) : null}
+
+        {section.type === "text" ? (
+          <TextAreaField
+            label="Text"
+            field={`page-section-${section.id}-body`}
+            rows={6}
+            value={section.body}
+            onChange={(body) => patchSection({ body })}
+          />
+        ) : null}
+
+        {section.type === "image" ? (
+          <ImageField
+            label="Bild"
+            field={`page-section-${section.id}-image`}
+            value={section.image}
+            onChange={(image) => patchSection({ image })}
+          />
+        ) : null}
+
+        {section.type === "buttons" ? (
+          <>
+            <TextField
+              label="Knapp 1 text"
+              value={section.primaryLabel}
+              onChange={(primaryLabel) => patchSection({ primaryLabel })}
+            />
+            <TextField
+              label="Knapp 1 länk"
+              value={section.primaryLink}
+              onChange={(primaryLink) => patchSection({ primaryLink })}
+            />
+            <TextField
+              label="Knapp 2 text"
+              value={section.secondaryLabel}
+              onChange={(secondaryLabel) => patchSection({ secondaryLabel })}
+            />
+            <TextField
+              label="Knapp 2 länk"
+              value={section.secondaryLink}
+              onChange={(secondaryLink) => patchSection({ secondaryLink })}
+            />
+          </>
+        ) : null}
+
+        {section.type === "spacer" ? (
+          <RangeField
+            label="Höjd"
+            value={section.height}
+            onChange={(height) => patchSection({ height })}
+            min={8}
+            max={240}
+            step={4}
+            unit="px"
+          />
+        ) : null}
+
+        <button type="button" className="cz-text-button cz-text-button--danger" onClick={() => removeSection(section.id)}>
+          Ta bort sektion
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <div className="cz-form">
+      <TextField
+        label="Sidtitel"
+        value={page.title}
+        onChange={(title) => {
+          patchPage({ title, navLabel: page.navLabel === page.title ? title : page.navLabel });
+        }}
+      />
+      <TextField
+        label="URL-slug"
+        value={page.slug}
+        onChange={setSlug}
+        hint={`Sidan syns på /${page.slug}`}
+      />
+      <TextField
+        label="Menynamn"
+        value={page.navLabel}
+        onChange={(navLabel) => patchPage({ navLabel })}
+      />
+      <Toggle
+        label="Visa i toppmenyn"
+        checked={page.showInNav}
+        onChange={(showInNav) => patchPage({ showInNav })}
+      />
+
+      <p className="cz-group-label">Sektioner</p>
+      <div className="cz-row-2">
+        {SECTION_TYPES.map((item) => (
+          <button
+            key={item.value}
+            type="button"
+            className="cz-button cz-button--small"
+            onClick={() => addSection(item.value)}
+          >
+            + {item.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="cz-list">
+        {page.sections.map((item, index) => (
+          <div key={item.id} className="cz-page-section-row">
+            <ListRow
+              title={SECTION_TYPES.find((entry) => entry.value === item.type)?.label || item.type}
+              meta={sectionMeta(item)}
+              onClick={() => setSectionId(item.id)}
+            />
+            <div className="cz-page-section-move">
+              <button type="button" className="cz-text-button" disabled={index === 0} onClick={() => moveSection(item.id, -1)}>
+                ↑
+              </button>
+              <button
+                type="button"
+                className="cz-text-button"
+                disabled={index === page.sections.length - 1}
+                onClick={() => moveSection(item.id, 1)}
+              >
+                ↓
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <button type="button" className="cz-text-button" onClick={() => goTo(`/${page.slug}`)}>
+        Visa sidan i förhandsvisningen
+      </button>
+      <button type="button" className="cz-text-button cz-text-button--danger" onClick={removePage}>
+        Ta bort sida
+      </button>
+    </div>
+  );
+}
+
+export function PagesPanel({ draft, update, editingId, setEditingId, goTo, focusField }: PanelProps) {
+  if (editingId) {
+    return (
+      <PageEditor
+        draft={draft}
+        update={update}
+        editingId={editingId}
+        setEditingId={setEditingId}
+        goTo={goTo}
+        focusField={focusField}
+      />
+    );
+  }
+
+  function createPage() {
+    const page = emptyPage(`Ny sida ${draft.pages.length + 1}`);
+    let slug = page.slug;
+    let n = 2;
+    while (
+      RESERVED_PAGE_SLUGS.has(slug) ||
+      draft.pages.some((item) => item.slug === slug)
+    ) {
+      slug = `${page.slug}-${n++}`;
+    }
+    const next = { ...page, slug };
+    update((state) => ({ ...state, pages: [...state.pages, next] }));
+    setEditingId(next.id);
+    goTo(`/${next.slug}`);
+  }
+
+  return (
+    <div className="cz-form">
+      <button type="button" className="cz-button" onClick={createPage}>
+        + Ny sida
+      </button>
+
+      <div className="cz-list">
+        {draft.pages.map((page) => (
+          <ListRow
+            key={page.id}
+            title={page.title}
+            meta={`/${page.slug} · ${page.sections.length} sektioner`}
+            badge={page.showInNav ? "Meny" : undefined}
+            onClick={() => {
+              setEditingId(page.id);
+              goTo(`/${page.slug}`);
+            }}
+          />
+        ))}
+      </div>
+
+      {!draft.pages.length ? (
+        <p className="cz-field-hint">Skapa en sida och bygg den med rubrik, text, bild, knappar eller mellanrum.</p>
+      ) : null}
     </div>
   );
 }

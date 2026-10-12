@@ -1,15 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import {
+  applyPublishedCms,
   CMS_UPDATED_EVENT,
   getEventBySlug,
   getFeaturedEvents,
   getHomeUpcomingEvents,
+  getNavPages,
   getPublishedEvents,
   getPublishedFlashbacks,
   getPublishedNews,
+  getPublishedPages,
   getSiteSettings,
 } from "../admin/cmsStore";
 import { isPastEvent } from "../data";
+import { isPreviewFrame } from "./previewBridge";
+import { fetchPublishedCms } from "./cmsRemote";
 
 function useCmsVersion() {
   const [version, setVersion] = useState(0);
@@ -21,6 +26,21 @@ function useCmsVersion() {
     return () => {
       window.removeEventListener(CMS_UPDATED_EVENT, refresh);
       window.removeEventListener("storage", refresh);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Don't overwrite admin drafts or the live preview iframe.
+    if (isPreviewFrame()) return;
+    if (window.location.pathname.startsWith("/admin")) return;
+
+    let active = true;
+    fetchPublishedCms().then((remote) => {
+      if (!active || !remote) return;
+      applyPublishedCms(remote);
+    });
+    return () => {
+      active = false;
     };
   }, []);
 
@@ -37,6 +57,8 @@ export function usePublishedEvents() {
       homeUpcoming: getHomeUpcomingEvents(),
       flashbacks: getPublishedFlashbacks(),
       news: getPublishedNews(),
+      pages: getPublishedPages(),
+      navPages: getNavPages(),
       site: getSiteSettings(),
     }),
     [version],

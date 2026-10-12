@@ -7,6 +7,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { clearPublishToken, setPublishToken } from "../lib/cmsRemote";
 import { isSupabaseConfigured, supabase } from "../lib/supabase";
 
 const LOCAL_SESSION_KEY = "partyhbg_admin_session";
@@ -90,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     sessionStorage.setItem(LOCAL_SESSION_KEY, inputUsername);
+    setPublishToken(password);
     setEmail(inputUsername);
     setMode("local");
     return null;
@@ -100,6 +102,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await supabase.auth.signOut();
     }
     sessionStorage.removeItem(LOCAL_SESSION_KEY);
+    clearPublishToken();
     setEmail(null);
     setMode("none");
   }, [mode]);

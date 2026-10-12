@@ -14,6 +14,7 @@ const FlashbackGallery = lazy(() =>
   import("./pages/Flashback").then((m) => ({ default: m.FlashbackGallery })),
 );
 const Contact = lazy(() => import("./pages/Contact").then((m) => ({ default: m.Contact })));
+const CmsPage = lazy(() => import("./pages/CmsPage").then((m) => ({ default: m.CmsPage })));
 
 function PageFallback() {
   return <div className="page page-fallback" aria-hidden="true" />;
@@ -75,6 +76,14 @@ const router = createBrowserRouter([
       { path: "om", element: <Navigate to="/" replace /> },
       { path: "residents", element: <Navigate to="/" replace /> },
       { path: "news", element: <Navigate to="/" replace /> },
+      {
+        path: ":slug",
+        element: (
+          <Suspense fallback={<PageFallback />}>
+            <CmsPage />
+          </Suspense>
+        ),
+      },
       { path: "*", element: <Navigate to="/" replace /> },
     ],
   },

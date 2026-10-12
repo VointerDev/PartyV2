@@ -29,6 +29,75 @@ export type CmsAsset = {
 
 export type CmsNews = NewsItem & { id: string };
 
+export type CmsSectionType = "heading" | "text" | "image" | "buttons" | "spacer";
+
+export type CmsSection = {
+  id: string;
+  type: CmsSectionType;
+  title: string;
+  body: string;
+  image: string;
+  align: "left" | "center";
+  primaryLabel: string;
+  primaryLink: string;
+  secondaryLabel: string;
+  secondaryLink: string;
+  height: number;
+};
+
+export type CmsPage = {
+  id: string;
+  slug: string;
+  title: string;
+  navLabel: string;
+  showInNav: boolean;
+  sections: CmsSection[];
+};
+
+export const RESERVED_PAGE_SLUGS = new Set([
+  "admin",
+  "kontakt",
+  "contact",
+  "events",
+  "flashback",
+  "about",
+  "om",
+  "news",
+  "evenemang",
+  "vimmelbilder",
+  "residents",
+  "api",
+  "p",
+]);
+
+export function emptySection(type: CmsSectionType = "text"): CmsSection {
+  return {
+    id: `sec-${crypto.randomUUID()}`,
+    type,
+    title: type === "heading" ? "Ny rubrik" : "",
+    body: type === "text" ? "Skriv din text här…" : "",
+    image: type === "image" ? "/photos/party.jpg" : "",
+    align: "left",
+    primaryLabel: type === "buttons" ? "Knapp" : "",
+    primaryLink: type === "buttons" ? "/kontakt" : "",
+    secondaryLabel: "",
+    secondaryLink: "",
+    height: type === "spacer" ? 48 : 24,
+  };
+}
+
+export function emptyPage(title = "Ny sida"): CmsPage {
+  const slug = slugify(title) || "ny-sida";
+  return {
+    id: `page-${crypto.randomUUID()}`,
+    slug,
+    title,
+    navLabel: title,
+    showInNav: false,
+    sections: [emptySection("heading"), emptySection("text")],
+  };
+}
+
 export type CmsSiteSettings = {
   heroTitle: string;
   heroVideo: string;
@@ -55,6 +124,18 @@ export type CmsSiteSettings = {
   bannerSize: "sm" | "md" | "lg";
   bannerDismissible: boolean;
   bannerSticky: boolean;
+  footerTitle: string;
+  footerLead: string;
+  footerPrimaryLabel: string;
+  footerPrimaryLink: string;
+  footerPrimaryBg: string;
+  footerPrimaryColor: string;
+  footerPrimaryBorder: string;
+  footerSecondaryLabel: string;
+  footerSecondaryLink: string;
+  footerSecondaryBg: string;
+  footerSecondaryColor: string;
+  footerSecondaryBorder: string;
 };
 
 export type CmsState = {
@@ -64,6 +145,7 @@ export type CmsState = {
   flashbacks: CmsFlashback[];
   assets: CmsAsset[];
   news: CmsNews[];
+  pages: CmsPage[];
   site: CmsSiteSettings;
   updatedAt: string | null;
 };
@@ -97,6 +179,19 @@ const defaultSite: CmsSiteSettings = {
   bannerSize: "md",
   bannerDismissible: true,
   bannerSticky: true,
+  footerTitle: "Helsingborgs [[studentfester]]",
+  footerLead:
+    "Studentnätter, gästlista och biljetter — fester för dem som pluggar, festar och stannar kvar till stängning.",
+  footerPrimaryLabel: "Följ @partyhbg ↗",
+  footerPrimaryLink: "https://www.instagram.com/partyhbg/",
+  footerPrimaryBg: "#f16cb3",
+  footerPrimaryColor: "#ffffff",
+  footerPrimaryBorder: "#f16cb3",
+  footerSecondaryLabel: "Mejla oss",
+  footerSecondaryLink: "/kontakt",
+  footerSecondaryBg: "transparent",
+  footerSecondaryColor: "#f16cb3",
+  footerSecondaryBorder: "#f16cb3",
 };
 
 function seedEventsFromData(): CmsEvent[] {
@@ -126,8 +221,48 @@ function seed(): CmsState {
     })),
     assets: [],
     news: seedNewsFromData(),
+    pages: [],
     site: { ...defaultSite },
     updatedAt: null,
+  };
+}
+
+function normalizeSection(raw: Partial<CmsSection> | undefined): CmsSection {
+  const base = emptySection((raw?.type as CmsSectionType) || "text");
+  const type = (["heading", "text", "image", "buttons", "spacer"] as const).includes(
+    raw?.type as CmsSectionType,
+  )
+    ? (raw!.type as CmsSectionType)
+    : base.type;
+
+  return {
+    ...base,
+    ...raw,
+    id: raw?.id?.trim() || base.id,
+    type,
+    title: raw?.title ?? base.title,
+    body: raw?.body ?? base.body,
+    image: raw?.image ?? base.image,
+    align: raw?.align === "center" ? "center" : "left",
+    primaryLabel: raw?.primaryLabel ?? base.primaryLabel,
+    primaryLink: raw?.primaryLink ?? base.primaryLink,
+    secondaryLabel: raw?.secondaryLabel ?? base.secondaryLabel,
+    secondaryLink: raw?.secondaryLink ?? base.secondaryLink,
+    height: clampNum(raw?.height, 8, 240, base.height),
+  };
+}
+
+function normalizePage(raw: Partial<CmsPage> | undefined): CmsPage | null {
+  if (!raw) return null;
+  const title = raw.title?.trim() || "Ny sida";
+  const slugRoot = slugify(raw.slug || title) || "ny-sida";
+  return {
+    id: raw.id?.trim() || `page-${crypto.randomUUID()}`,
+    slug: slugRoot,
+    title,
+    navLabel: raw.navLabel?.trim() || title,
+    showInNav: Boolean(raw.showInNav),
+    sections: Array.isArray(raw.sections) ? raw.sections.map((item) => normalizeSection(item)) : [],
   };
 }
 
@@ -159,6 +294,9 @@ function normalizeSite(raw: Partial<CmsSiteSettings> | undefined): CmsSiteSettin
 function normalizeState(raw: Partial<CmsState>): CmsState {
   const base = seed();
   const events = raw.events?.length ? raw.events : base.events;
+  const pages = Array.isArray(raw.pages)
+    ? raw.pages.map((page) => normalizePage(page)).filter((page): page is CmsPage => Boolean(page))
+    : base.pages;
   return {
     events,
     featuredSlugs: raw.featuredSlugs?.length ? raw.featuredSlugs : base.featuredSlugs,
@@ -166,6 +304,7 @@ function normalizeState(raw: Partial<CmsState>): CmsState {
     flashbacks: raw.flashbacks?.length ? raw.flashbacks : base.flashbacks,
     assets: raw.assets ?? base.assets,
     news: raw.news?.length ? raw.news : base.news,
+    pages,
     site: normalizeSite(raw.site),
     updatedAt: raw.updatedAt ?? base.updatedAt,
   };
@@ -195,6 +334,14 @@ export function loadCms(): CmsState {
 
 export function saveCms(state: CmsState) {
   const next = { ...state, updatedAt: new Date().toISOString() };
+  localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(next));
+  window.dispatchEvent(new Event(CMS_UPDATED_EVENT));
+  return next;
+}
+
+/** Apply a remotely published CMS snapshot for all visitors. */
+export function applyPublishedCms(state: Partial<CmsState>) {
+  const next = normalizeState(state);
   localStorage.setItem(CMS_STORAGE_KEY, JSON.stringify(next));
   window.dispatchEvent(new Event(CMS_UPDATED_EVENT));
   return next;
@@ -270,4 +417,17 @@ export function getPublishedNews(): NewsItem[] {
 
 export function getSiteSettings(): CmsSiteSettings {
   return loadCms().site;
+}
+
+export function getPublishedPages(): CmsPage[] {
+  return loadCms().pages;
+}
+
+export function getPageBySlug(slug: string): CmsPage | undefined {
+  const normalized = slugify(slug);
+  return getPublishedPages().find((page) => page.slug === normalized);
+}
+
+export function getNavPages(): CmsPage[] {
+  return getPublishedPages().filter((page) => page.showInNav && page.navLabel.trim());
 }

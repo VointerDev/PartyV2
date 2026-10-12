@@ -2,21 +2,24 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ComponentType }
 import { useNavigate } from "react-router-dom";
 import { Logo } from "../../components/Logo";
 import { PREVIEW_CHANNEL, type PreviewToFrame, type PreviewToParent } from "../../lib/previewBridge";
+import { publishCmsRemote } from "../../lib/cmsRemote";
 import { loadCms, saveCms, type CmsState } from "../cmsStore";
-import { EventsPanel, FlashbacksPanel, NewsPanel, SitePanel, type PanelProps } from "./panels";
+import {
+  EventsPanel,
+  FlashbacksPanel,
+  NewsPanel,
+  PagesPanel,
+  SitePanel,
+  type PanelProps,
+} from "./panels";
 
-type SectionId = "site" | "events" | "news" | "flashbacks";
+type SectionId = "site" | "events" | "news" | "flashbacks" | "pages";
 type Device = "desktop" | "tablet" | "mobile";
 
 const devices: { id: Device; label: string; width: number | null }[] = [
   { id: "desktop", label: "Dator", width: null },
   { id: "tablet", label: "Platta", width: 834 },
   { id: "mobile", label: "Mobil", width: 390 },
-];
-
-const pages = [
-  { path: "/", label: "Hem" },
-  { path: "/kontakt", label: "Kontakt" },
 ];
 
 /** Maps a clicked region of the hero/home page to the field that controls it. */
@@ -30,6 +33,11 @@ const siteFields: Record<string, string> = {
   upcoming: "upcoming",
   news: "news",
   banner: "banner",
+  footer: "footerTitle",
+  footerTitle: "footerTitle",
+  footerLead: "footerLead",
+  footerPrimary: "footerPrimary",
+  footerSecondary: "footerSecondary",
 };
 
 const panels: Record<SectionId, ComponentType<PanelProps>> = {
@@ -37,6 +45,7 @@ const panels: Record<SectionId, ComponentType<PanelProps>> = {
   events: EventsPanel,
   news: NewsPanel,
   flashbacks: FlashbacksPanel,
+  pages: PagesPanel,
 };
 
 export function AdminCustomizer() {
@@ -48,6 +57,7 @@ export function AdminCustomizer() {
   const [device, setDevice] = useState<Device>("desktop");
   const [path, setPath] = useState("/");
   const [status, setStatus] = useState<string | null>(null);
+  const [publishing, setPublishing] = useState(false);
   const [selectMode, setSelectMode] = useState(true);
   const [focusField, setFocusField] = useState<string | null>(null);
   const body = useRef<HTMLDivElement>(null);
@@ -67,40 +77,70 @@ export function AdminCustomizer() {
     [post],
   );
 
-  const openTarget = useCallback((target: string) => {
-    const [kind, key] = target.split(":");
-    const state = draftRef.current;
+  const goTo = useCallback(
+    (next: string) => {
+      setPath(next);
+      post({ channel: PREVIEW_CHANNEL, action: "navigate", path: next });
+    },
+    [post],
+  );
 
-    if (kind === "site") {
-      setSection("site");
-      setEditingId(null);
-      setFocusField(siteFields[key] ?? null);
-      return;
-    }
+  const openTarget = useCallback(
+    (target: string) => {
+      const [kind, key, sectionKey] = target.split(":");
+      const state = draftRef.current;
 
-    if (kind === "event") {
-      const event = state.events.find((item) => item.slug === key);
-      if (!event) return;
-      setSection("events");
-      setEditingId(event.id);
-      return;
-    }
+      if (kind === "site") {
+        setSection("site");
+        setEditingId(null);
+        setFocusField(siteFields[key] ?? null);
+        return;
+      }
 
-    if (kind === "news") {
-      const item = state.news.find((entry) => entry.slug === key);
-      if (!item) return;
-      setSection("news");
-      setEditingId(item.id);
-      return;
-    }
+      if (kind === "event") {
+        const event = state.events.find((item) => item.slug === key);
+        if (!event) return;
+        setSection("events");
+        setEditingId(event.id);
+        return;
+      }
 
-    if (kind === "flashback") {
-      const item = state.flashbacks.find((entry) => entry.slug === key);
-      if (!item) return;
-      setSection("flashbacks");
-      setEditingId(item.id);
-    }
-  }, []);
+      if (kind === "news") {
+        const item = state.news.find((entry) => entry.slug === key);
+        if (!item) return;
+        setSection("news");
+        setEditingId(item.id);
+        return;
+      }
+
+      if (kind === "flashback") {
+        const item = state.flashbacks.find((entry) => entry.slug === key);
+        if (!item) return;
+        setSection("flashbacks");
+        setEditingId(item.id);
+        return;
+      }
+
+      if (kind === "page") {
+        const page = state.pages.find((item) => item.id === key);
+        if (!page) return;
+        setSection("pages");
+        setEditingId(page.id);
+        goTo(`/${page.slug}`);
+        return;
+      }
+
+      if (kind === "page-section") {
+        const page = state.pages.find((item) => item.id === key);
+        if (!page) return;
+        setSection("pages");
+        setEditingId(page.id);
+        setFocusField(sectionKey ? `page-section-${sectionKey}` : null);
+        goTo(`/${page.slug}`);
+      }
+    },
+    [goTo],
+  );
 
   useEffect(() => {
     function onMessage(event: MessageEvent) {
@@ -153,15 +193,16 @@ export function AdminCustomizer() {
     return () => window.removeEventListener("beforeunload", warn);
   }, [dirty]);
 
-  const goTo = useCallback(
-    (next: string) => {
-      setPath(next);
-      post({ channel: PREVIEW_CHANNEL, action: "navigate", path: next });
-    },
-    [post],
-  );
-
   const update = useCallback((fn: (state: CmsState) => CmsState) => setDraft(fn), []);
+
+  const previewPages = useMemo(
+    () => [
+      { path: "/", label: "Hem" },
+      { path: "/kontakt", label: "Kontakt" },
+      ...draft.pages.map((page) => ({ path: `/${page.slug}`, label: page.navLabel || page.title })),
+    ],
+    [draft.pages],
+  );
 
   const sections: { id: SectionId; title: string; sub: string; path: string; scroll?: string }[] = [
     {
@@ -170,6 +211,12 @@ export function AdminCustomizer() {
       sub: "Banner, hero, rubriker",
       path: "/",
       scroll: ".spark-hero",
+    },
+    {
+      id: "pages",
+      title: "Sidor",
+      sub: draft.pages.length ? `${draft.pages.length} sidor` : "Skapa nya sidor",
+      path: draft.pages[0] ? `/${draft.pages[0].slug}` : "/",
     },
     {
       id: "events",
@@ -212,16 +259,27 @@ export function AdminCustomizer() {
     else setSection(null);
   }
 
-  function publish() {
+  async function publish() {
+    if (publishing) return;
+    setPublishing(true);
     try {
       const next = saveCms(draft);
       setSaved(next);
       setDraft(next);
-      setStatus("Publicerat — sajten är uppdaterad.");
+      setStatus("Publicerar till live-sajten…");
+
+      const remote = await publishCmsRemote(next);
+      if (remote.ok) {
+        setStatus("Publicerat — live-sajten är uppdaterad.");
+      } else {
+        setStatus(`Sparat lokalt. Live: ${remote.error}`);
+      }
     } catch {
       setStatus("Kunde inte spara. Bilderna tar för mycket plats.");
+    } finally {
+      setPublishing(false);
+      window.setTimeout(() => setStatus(null), 5000);
     }
-    window.setTimeout(() => setStatus(null), 3000);
   }
 
   function revert() {
@@ -239,6 +297,7 @@ export function AdminCustomizer() {
     if (section === "events") return draft.events.find((item) => item.id === editingId)?.title;
     if (section === "news") return draft.news.find((item) => item.id === editingId)?.title;
     if (section === "flashbacks") return draft.flashbacks.find((item) => item.id === editingId)?.title;
+    if (section === "pages") return draft.pages.find((item) => item.id === editingId)?.title;
     return null;
   })();
 
@@ -279,6 +338,7 @@ export function AdminCustomizer() {
               editingId={editingId}
               setEditingId={setEditingId}
               goTo={goTo}
+              focusField={focusField}
             />
           ) : (
             <nav className="cz-sections">
@@ -325,10 +385,10 @@ export function AdminCustomizer() {
             <button
               type="button"
               className="cz-button cz-button--primary"
-              disabled={!dirty}
-              onClick={publish}
+              disabled={!dirty || publishing}
+              onClick={() => void publish()}
             >
-              {dirty ? "Publicera" : "Allt är publicerat"}
+              {publishing ? "Publicerar…" : dirty ? "Publicera" : "Allt är publicerat"}
             </button>
             <button type="button" className="cz-text-button" disabled={!dirty} onClick={revert}>
               Ångra
@@ -340,7 +400,7 @@ export function AdminCustomizer() {
       <section className="cz-stage">
         <div className="cz-stage-bar">
           <div className="cz-pages">
-            {pages.map((page) => (
+            {previewPages.map((page) => (
               <button
                 key={page.path}
                 type="button"
