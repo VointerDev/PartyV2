@@ -5527,7 +5527,7 @@ a.site-banner-text:hover .site-banner-cta {
   width: 100%;
   min-height: 100dvh;
   padding:
-    calc(132px + env(safe-area-inset-top))
+    calc(48px + env(safe-area-inset-top))
     max(16px, env(safe-area-inset-right))
     40px
     max(16px, env(safe-area-inset-left));
@@ -5537,11 +5537,25 @@ a.site-banner-text:hover .site-banner-cta {
   .spark-hero-content {
     gap: 32px;
     padding:
-      calc(160px + env(safe-area-inset-top))
+      calc(64px + env(safe-area-inset-top))
       max(20px, env(safe-area-inset-right))
       48px
       max(20px, env(safe-area-inset-left));
   }
+}
+
+.spark-hero-brand {
+  display: flex;
+  justify-content: center;
+  animation: spark-rise 0.7s ease both;
+}
+
+.spark-hero-logo {
+  display: block;
+  width: auto;
+  height: clamp(56px, 10vw, 96px);
+  max-width: min(80vw, 420px);
+  object-fit: contain;
 }
 
 .spark-hero-title {
@@ -5569,19 +5583,39 @@ a.site-banner-text:hover .site-banner-cta {
 }
 
 .spark-hero.is-center .spark-hero-bottom {
+  align-items: center;
   justify-content: center;
 }
 
 .spark-hero-actions {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px;
-  align-self: flex-start;
+  gap: 14px;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
   animation: spark-rise 0.7s ease 0.12s both;
 }
 
 .spark-hero-actions .spark-btn {
   display: inline-flex;
+  min-height: 54px;
+  padding: 0 28px;
+  font-size: 16px;
+}
+
+@media (min-width: 768px) {
+  .spark-hero-actions {
+    gap: 16px;
+  }
+
+  .spark-hero-actions .spark-btn {
+    min-height: 58px;
+    padding: 0 32px;
+    font-size: 17px;
+  }
 }
 
 .spark-hero-bottom {
@@ -6544,73 +6578,114 @@ a.site-banner-text:hover .site-banner-cta {
 
 /* —— Contact —— */
 .spark-contact {
+  position: relative;
+  isolation: isolate;
   width: 100%;
-  min-height: calc(100dvh - 120px);
-  background: #000;
-  padding: 48px max(16px, env(safe-area-inset-right)) 80px max(16px, env(safe-area-inset-left));
+  min-height: calc(100dvh - 100px);
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 55% at 85% 10%, rgba(241, 108, 179, 0.16), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(241, 108, 179, 0.08), transparent 50%),
+    #050505;
+  padding: 40px max(16px, env(safe-area-inset-right)) 88px max(16px, env(safe-area-inset-left));
 }
 
 @media (min-width: 768px) {
   .spark-contact {
-    padding: 72px max(32px, env(safe-area-inset-right)) 100px max(32px, env(safe-area-inset-left));
+    padding: 56px max(32px, env(safe-area-inset-right)) 110px max(32px, env(safe-area-inset-left));
   }
 }
 
 @media (min-width: 1100px) {
   .spark-contact {
-    padding: 88px max(48px, env(safe-area-inset-right)) 120px max(48px, env(safe-area-inset-left));
+    padding: 72px max(48px, env(safe-area-inset-right)) 120px max(48px, env(safe-area-inset-left));
   }
+}
+
+.spark-contact-shell {
+  width: min(100%, 1120px);
+  margin: 0 auto;
 }
 
 .spark-contact-head {
   display: grid;
-  gap: 16px;
+  gap: 18px;
   justify-items: start;
   margin-bottom: 40px;
-  max-width: 40rem;
+  max-width: 42rem;
 }
 
 @media (min-width: 960px) {
   .spark-contact-head {
-    max-width: 48rem;
     margin-bottom: 56px;
+    max-width: 48rem;
   }
+}
 
-  .spark-contact-lead {
-    font-size: 18px;
-    max-width: 36rem;
-  }
+.spark-contact-title {
+  font-size: clamp(44px, 8vw, 84px);
+  line-height: 0.92;
 }
 
 .spark-contact-eyebrow {
   margin: 0;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-pink);
 }
 
 .spark-contact-lead {
   margin: 0;
-  font-size: 16px;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.68);
+  max-width: 34rem;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (min-width: 960px) {
+  .spark-contact-lead {
+    font-size: 18px;
+  }
 }
 
 .spark-contact-body {
   display: grid;
-  gap: 48px;
+  gap: 28px;
   width: 100%;
-  max-width: 72rem;
+  align-items: stretch;
 }
 
 @media (min-width: 960px) {
   .spark-contact-body {
-    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
-    gap: 48px 64px;
-    align-items: start;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.9fr);
+    gap: 28px;
   }
+}
+
+.spark-contact-panel,
+.spark-contact-aside {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 24px 20px 28px;
+}
+
+@media (min-width: 768px) {
+  .spark-contact-panel,
+  .spark-contact-aside {
+    padding: 32px 28px 36px;
+  }
+}
+
+.spark-contact-panel-title,
+.spark-contact-aside-label {
+  margin: 0 0 22px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .spark-contact-form {
@@ -6624,7 +6699,7 @@ a.site-banner-text:hover .site-banner-cta {
 @media (min-width: 640px) {
   .spark-contact-form {
     grid-template-columns: 1fr 1fr;
-    gap: 20px 18px;
+    gap: 20px 16px;
   }
 
   .spark-contact-field--full,
@@ -6641,52 +6716,62 @@ a.site-banner-text:hover .site-banner-cta {
 .spark-contact-field input,
 .spark-contact-field textarea {
   width: 100%;
-  min-height: 48px;
-  padding: 12px 14px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  min-height: 52px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 0;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.35);
   color: #fff;
   font: inherit;
   font-size: 15px;
   line-height: 1.4;
-  transition: border-color 0.15s ease, background 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .spark-contact-field textarea {
-  min-height: 160px;
+  min-height: 180px;
   resize: vertical;
 }
 
 @media (min-width: 960px) {
   .spark-contact-field textarea {
-    min-height: 200px;
+    min-height: 220px;
   }
 }
 
 .spark-contact-field input::placeholder,
 .spark-contact-field textarea::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.34);
+}
+
+.spark-contact-field input:hover,
+.spark-contact-field textarea:hover {
+  border-color: rgba(255, 255, 255, 0.28);
 }
 
 .spark-contact-field input:focus,
 .spark-contact-field textarea:focus {
   outline: none;
   border-color: var(--color-pink);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 0 3px rgba(241, 108, 179, 0.18);
 }
 
 .spark-contact-form-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 16px;
-  margin-top: 4px;
+  gap: 14px 18px;
+  margin-top: 8px;
 }
 
-.spark-contact-form-actions .spark-btn {
+.spark-contact-form-actions .spark-btn,
+.spark-contact-submit {
   border: 0;
   cursor: pointer;
+  min-height: 52px;
+  padding: 0 28px;
+  font-size: 15px;
 }
 
 .spark-contact-form-note {
@@ -6701,31 +6786,29 @@ a.site-banner-text:hover .site-banner-cta {
   gap: 0;
   width: 100%;
   margin-bottom: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.12);
-}
-
-@media (min-width: 960px) {
-  .spark-contact-grid {
-    border-top: 0;
-    padding-top: 2px;
-  }
-
-  .spark-contact-grid .spark-contact-item:first-child {
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-  }
 }
 
 .spark-contact-item {
   display: grid;
   gap: 8px;
-  padding: 22px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   color: #fff;
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.spark-contact-item:first-child {
+  padding-top: 0;
+}
+
+.spark-contact-item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
 }
 
 a.spark-contact-item:hover {
   color: var(--color-pink);
+  transform: translateX(2px);
 }
 
 .spark-contact-item--static {
@@ -6742,17 +6825,11 @@ a.spark-contact-item:hover {
 
 .spark-contact-value {
   font-family: var(--font-display);
-  font-size: clamp(24px, 3.4vw, 40px);
+  font-size: clamp(26px, 3.2vw, 38px);
   font-weight: 400;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   line-height: 1.05;
   overflow-wrap: anywhere;
-}
-
-@media (min-width: 960px) {
-  .spark-contact-value {
-    font-size: clamp(26px, 2.4vw, 36px);
-  }
 }
 

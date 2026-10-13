@@ -35,93 +35,104 @@ export function Contact() {
         path="/kontakt"
       />
 
-      <header className="spark-contact-head">
-        <p className="spark-contact-eyebrow">PartyHBG</p>
-        <h1 className="spark-section-title">
-          Kontakta <span className="spark-mark">oss</span>
-        </h1>
-        <p className="spark-contact-lead">
-          Har du frågor om fester, gästlista eller samarbeten? Skriv ett meddelande
-          här — vi återkommer så snart vi kan.
-        </p>
-      </header>
+      <div className="spark-contact-shell">
+        <header className="spark-contact-head">
+          <p className="spark-contact-eyebrow">PartyHBG</p>
+          <h1 className="spark-section-title spark-contact-title">
+            Kontakta <span className="spark-mark">oss</span>
+          </h1>
+          <p className="spark-contact-lead">
+            Har du frågor om fester, gästlista eller samarbeten? Skriv ett meddelande
+            här — vi återkommer så snart vi kan.
+          </p>
+        </header>
 
-      <div className="spark-contact-body">
-        <form className="spark-contact-form" onSubmit={onSubmit}>
-          <label className="spark-contact-field">
-            <span className="spark-contact-label">Namn</span>
-            <input
-              type="text"
-              name="name"
-              autoComplete="name"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Ditt namn"
-            />
-          </label>
-
-          <label className="spark-contact-field">
-            <span className="spark-contact-label">E-post</span>
-            <input
-              type="email"
-              name="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="namn@mail.se"
-            />
-          </label>
-
-          <label className="spark-contact-field spark-contact-field--full">
-            <span className="spark-contact-label">Meddelande</span>
-            <textarea
-              name="message"
-              required
-              rows={6}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Vad vill du höra av dig om?"
-            />
-          </label>
-
-          <div className="spark-contact-form-actions">
-            <button type="submit" className="spark-btn">
+        <div className="spark-contact-body">
+          <section className="spark-contact-panel" aria-labelledby="contact-form-title">
+            <h2 id="contact-form-title" className="spark-contact-panel-title">
               Skicka meddelande
-            </button>
-            {sent ? (
-              <p className="spark-contact-form-note">
-                Öppnar din e-postapp — skicka därifrån för att nå oss.
-              </p>
-            ) : null}
-          </div>
-        </form>
+            </h2>
 
-        <div className="spark-contact-grid">
-          <a href={`mailto:${EMAIL}`} className="spark-contact-item">
-            <span className="spark-contact-label">Mejl</span>
-            <span className="spark-contact-value">
-              {EMAIL} <span aria-hidden="true">↗</span>
-            </span>
-          </a>
+            <form className="spark-contact-form" onSubmit={onSubmit}>
+              <label className="spark-contact-field">
+                <span className="spark-contact-label">Namn</span>
+                <input
+                  type="text"
+                  name="name"
+                  autoComplete="name"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ditt namn"
+                />
+              </label>
 
-          <a
-            href={INSTAGRAM_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="spark-contact-item"
-          >
-            <span className="spark-contact-label">Instagram</span>
-            <span className="spark-contact-value">
-              {INSTAGRAM_HANDLE} <span aria-hidden="true">↗</span>
-            </span>
-          </a>
+              <label className="spark-contact-field">
+                <span className="spark-contact-label">E-post</span>
+                <input
+                  type="email"
+                  name="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="namn@mail.se"
+                />
+              </label>
 
-          <div className="spark-contact-item spark-contact-item--static">
-            <span className="spark-contact-label">Plats</span>
-            <span className="spark-contact-value">Helsingborg</span>
-          </div>
+              <label className="spark-contact-field spark-contact-field--full">
+                <span className="spark-contact-label">Meddelande</span>
+                <textarea
+                  name="message"
+                  required
+                  rows={6}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Vad vill du höra av dig om?"
+                />
+              </label>
+
+              <div className="spark-contact-form-actions">
+                <button type="submit" className="spark-btn spark-contact-submit">
+                  Skicka meddelande
+                </button>
+                {sent ? (
+                  <p className="spark-contact-form-note">
+                    Öppnar din e-postapp — skicka därifrån för att nå oss.
+                  </p>
+                ) : null}
+              </div>
+            </form>
+          </section>
+
+          <aside className="spark-contact-aside" aria-label="Direktkontakt">
+            <p className="spark-contact-aside-label">Eller nå oss direkt</p>
+            <div className="spark-contact-grid">
+              <a href={`mailto:${EMAIL}`} className="spark-contact-item">
+                <span className="spark-contact-label">Mejl</span>
+                <span className="spark-contact-value">
+                  {EMAIL} <span aria-hidden="true">↗</span>
+                </span>
+              </a>
+
+              <a
+                href={INSTAGRAM_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="spark-contact-item"
+              >
+                <span className="spark-contact-label">Instagram</span>
+                <span className="spark-contact-value">
+                  {INSTAGRAM_HANDLE} <span aria-hidden="true">↗</span>
+                </span>
+              </a>
+
+              <div className="spark-contact-item spark-contact-item--static">
+                <span className="spark-contact-label">Plats</span>
+                <span className="spark-contact-value">Helsingborg</span>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </div>

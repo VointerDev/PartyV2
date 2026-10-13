@@ -29,6 +29,7 @@ const siteFields: Record<string, string> = {
   heroMedia: "heroVideo",
   heroPrimary: "heroPrimary",
   heroSecondary: "heroSecondary",
+  heroTertiary: "heroTertiary",
   heroTitleSize: "heroTitleSize",
   upcoming: "upcoming",
   news: "news",

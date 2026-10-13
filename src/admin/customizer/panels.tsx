@@ -241,17 +241,32 @@ export function SitePanel({ draft, update, goTo }: PanelProps) {
           field="heroSecondary"
           value={site.heroSecondaryLabel}
           onChange={(heroSecondaryLabel) => setSite({ heroSecondaryLabel })}
-          placeholder="Flashback"
+          placeholder="Kontakta oss"
         />
         <TextField
           label="Länk"
           value={site.heroSecondaryLink}
           onChange={(heroSecondaryLink) => setSite({ heroSecondaryLink })}
-          placeholder="/flashback"
+          placeholder="/kontakt"
+        />
+      </div>
+      <div className="cz-row-2">
+        <TextField
+          label="Knapp 3"
+          field="heroTertiary"
+          value={site.heroTertiaryLabel}
+          onChange={(heroTertiaryLabel) => setSite({ heroTertiaryLabel })}
+          placeholder="Mejla oss"
+        />
+        <TextField
+          label="Länk"
+          value={site.heroTertiaryLink}
+          onChange={(heroTertiaryLink) => setSite({ heroTertiaryLink })}
+          placeholder="mailto:hello@partyhbg.se"
         />
       </div>
       <p className="cz-hint-block">
-        Töm knappens text för att dölja den. Länken kan vara en sida på sajten (<code>/events</code>
+        Töm knappens text för att dölja den. Länken kan vara en sida på sajten (<code>/kontakt</code>
         ) eller en extern adress (<code>https://…</code>) som öppnas i ny flik.
       </p>
 

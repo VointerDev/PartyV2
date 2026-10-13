@@ -106,6 +106,8 @@ export type CmsSiteSettings = {
   heroPrimaryLink: string;
   heroSecondaryLabel: string;
   heroSecondaryLink: string;
+  heroTertiaryLabel: string;
+  heroTertiaryLink: string;
   heroTitleSize: number;
   heroTitleMaxWidth: number;
   heroAlign: "left" | "center";
@@ -157,13 +159,15 @@ const defaultSite: CmsSiteSettings = {
   heroTitle: "Upptäck studentfesten [[genom nätter]] som sätter Helsingborg i rörelse",
   heroVideo: "/videos/party.mp4",
   heroPoster: "/photos/party.jpg",
-  heroPrimaryLabel: "",
-  heroPrimaryLink: "/#scener",
-  heroSecondaryLabel: "",
-  heroSecondaryLink: "/flashback",
+  heroPrimaryLabel: "Följ @partyhbg",
+  heroPrimaryLink: "https://www.instagram.com/partyhbg/",
+  heroSecondaryLabel: "Kontakta oss",
+  heroSecondaryLink: "/kontakt",
+  heroTertiaryLabel: "",
+  heroTertiaryLink: "",
   heroTitleSize: 72,
   heroTitleMaxWidth: 900,
-  heroAlign: "left",
+  heroAlign: "center",
   heroHeight: 100,
   contentMaxWidth: 1600,
   sectionTitleSize: 40,

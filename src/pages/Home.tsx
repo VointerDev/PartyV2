@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { PageMeta } from "../components/PageMeta";
 import { InstagramFeed } from "../components/InstagramFeed";
 import { SiteBanner } from "../components/SiteBanner";
+import { Logo } from "../components/Logo";
 import { usePublishedEvents } from "../lib/usePublishedEvents";
 import { DEFAULT_DESCRIPTION } from "../lib/seo";
 import { editable } from "../lib/previewBridge";
@@ -132,8 +133,10 @@ export function Home() {
     "--spark-hero-height": `${site.heroHeight}vh`,
   } as CSSProperties;
 
-  const showPrimary = Boolean(site.heroPrimaryLabel.trim());
-  const showSecondary = Boolean(site.heroSecondaryLabel.trim());
+  const primaryLabel = site.heroPrimaryLabel.trim() || "Följ @partyhbg";
+  const primaryLink = site.heroPrimaryLink.trim() || "https://www.instagram.com/partyhbg/";
+  const secondaryLabel = site.heroSecondaryLabel.trim() || "Kontakta oss";
+  const secondaryLink = site.heroSecondaryLink.trim() || "/kontakt";
 
   return (
     <div className="spark-home">
@@ -146,7 +149,7 @@ export function Home() {
       <SiteBanner site={site} />
 
       <section
-        className={`spark-hero ${site.heroAlign === "center" ? "is-center" : ""}`}
+        className="spark-hero is-center"
         style={heroStyle}
         {...editable("site:hero", "Hero")}
       >
@@ -174,28 +177,26 @@ export function Home() {
         <div className="spark-hero-veil" aria-hidden="true" />
 
         <div className="spark-hero-content">
+          <div className="spark-hero-brand">
+            <Logo className="spark-hero-logo" />
+          </div>
+
           <h1 className="spark-hero-title" {...editable("site:heroTitle", "Hero-rubrik")}>
             {renderHeroTitle(heroTitle)}
           </h1>
 
-          {showPrimary || showSecondary ? (
-            <div className="spark-hero-actions">
-              {showPrimary ? (
-                <span {...editable("site:heroPrimary", "Hero-knapp 1")}>
-                  <CtaLink to={site.heroPrimaryLink} className="spark-btn">
-                    {site.heroPrimaryLabel} <span aria-hidden="true">↗</span>
-                  </CtaLink>
-                </span>
-              ) : null}
-              {showSecondary ? (
-                <span {...editable("site:heroSecondary", "Hero-knapp 2")}>
-                  <CtaLink to={site.heroSecondaryLink} className="spark-btn spark-btn--ghost">
-                    {site.heroSecondaryLabel}
-                  </CtaLink>
-                </span>
-              ) : null}
-            </div>
-          ) : null}
+          <div className="spark-hero-actions">
+            <span {...editable("site:heroPrimary", "Hero-knapp 1")}>
+              <CtaLink to={primaryLink} className="spark-btn">
+                {primaryLabel}
+              </CtaLink>
+            </span>
+            <span {...editable("site:heroSecondary", "Hero-knapp 2")}>
+              <CtaLink to={secondaryLink} className="spark-btn spark-btn--ghost">
+                {secondaryLabel}
+              </CtaLink>
+            </span>
+          </div>
 
           <div className="spark-hero-bottom">
             <div className="spark-avatars" aria-label="3000+ guests">
