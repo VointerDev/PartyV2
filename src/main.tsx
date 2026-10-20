@@ -6,7 +6,7 @@ import { App } from "./App";
 import "./index.css";
 
 /** Set to true to enable the public Flashback pages again. */
-const SHOW_FLASHBACK = false;
+const SHOW_FLASHBACK = true;
 
 const Home = lazy(() => import("./pages/Home").then((m) => ({ default: m.Home })));
 const Flashback = lazy(() => import("./pages/Flashback").then((m) => ({ default: m.Flashback })));

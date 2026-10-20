@@ -256,13 +256,13 @@ export function SitePanel({ draft, update, goTo }: PanelProps) {
           field="heroTertiary"
           value={site.heroTertiaryLabel}
           onChange={(heroTertiaryLabel) => setSite({ heroTertiaryLabel })}
-          placeholder="Mejla oss"
+          placeholder="Flashback"
         />
         <TextField
           label="Länk"
           value={site.heroTertiaryLink}
           onChange={(heroTertiaryLink) => setSite({ heroTertiaryLink })}
-          placeholder="mailto:hello@partyhbg.se"
+          placeholder="/flashback"
         />
       </div>
       <p className="cz-hint-block">

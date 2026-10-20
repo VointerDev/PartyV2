@@ -12,7 +12,7 @@ import {
 import { slugify } from "../admin/cmsStore";
 import { PageMeta } from "../components/PageMeta";
 import type { Flashback } from "../data";
-import { agendaDate, eventYear } from "../data";
+import { agendaDate } from "../data";
 import { editable } from "../lib/previewBridge";
 import { usePublishedEvents } from "../lib/usePublishedEvents";
 import { flashbackMetaDescription } from "../lib/seo";
@@ -305,53 +305,40 @@ export function Flashback() {
         path="/flashback"
       />
 
-      <header className="spark-flashback-head">
-        <h1 className="spark-section-title">
-          Flash<span className="spark-mark">back</span>
-        </h1>
-        <p className="spark-flashback-lead">
-          Bilder från nätter som redan brunnit. Öppna en fest och spara dina favoriter.
-        </p>
-      </header>
+      <div className="spark-flashback-shell">
+        <header className="spark-flashback-head">
+          <h1 className="spark-section-title spark-flashback-title">
+            Flash<span className="spark-mark">back</span>
+          </h1>
+        </header>
 
-      <ul className="spark-flashback-index">
-        {flashbacks.map((item) => (
-          <li key={item.slug}>
-            <Link to={`/flashback/${item.slug}`} className="spark-flashback-index-link">
-              <span className="spark-flashback-index-title">{item.title}</span>
-              <span className="spark-flashback-index-meta">
-                {item.venue} · {item.count} bilder · {eventYear(item.date)}
-              </span>
-              <span className="spark-flashback-index-arrow" aria-hidden="true">
-                →
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
-
-      <div className="spark-flashback-covers">
-        {flashbacks.map((item) => (
-          <Link
-            key={item.slug}
-            to={`/flashback/${item.slug}`}
-            className="spark-flashback-cover"
-            {...editable(`flashback:${item.slug}`, item.title)}
-          >
-            <img
-              src={item.cover}
-              alt={`${item.title} på ${item.venue} i Helsingborg`}
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="spark-flashback-cover-meta">
-              <p>{item.title}</p>
-              <p>
-                {item.venue} · {agendaDate(item.date)}
-              </p>
-            </div>
-          </Link>
-        ))}
+        {flashbacks.length ? (
+          <div className="spark-flashback-covers">
+            {flashbacks.map((item) => (
+              <Link
+                key={item.slug}
+                to={`/flashback/${item.slug}`}
+                className="spark-flashback-cover"
+                {...editable(`flashback:${item.slug}`, item.title)}
+              >
+                <img
+                  src={item.cover}
+                  alt={`${item.title} på ${item.venue} i Helsingborg`}
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="spark-flashback-cover-meta">
+                  <p>{item.title}</p>
+                  <p>
+                    {item.venue} · {item.count} bilder · {agendaDate(item.date)}
+                  </p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="spark-flashback-empty">Inga flashbacks publicerade ännu.</p>
+        )}
       </div>
     </div>
   );
@@ -379,7 +366,7 @@ export function FlashbackGallery() {
 
   return (
     <div
-      className="spark-flashback"
+      className="spark-flashback spark-flashback--gallery"
       {...editable(`flashback:${gallery.slug}`, gallery.title)}
     >
       <PageMeta
@@ -389,37 +376,35 @@ export function FlashbackGallery() {
         image={gallery.cover}
       />
 
-      <header className="spark-flashback-hero">
-        <div className="spark-flashback-hero-media" aria-hidden="true">
-          <img src={gallery.cover} alt="" />
-        </div>
-        <div className="spark-flashback-hero-veil" aria-hidden="true" />
-        <div className="spark-flashback-hero-content">
-          <h1 className="spark-flashback-hero-title">{gallery.title}</h1>
-          <div className="spark-flashback-chips">
-            <span>{gallery.venue}</span>
-            <span>{gallery.count} bilder</span>
-            <span>{agendaDate(gallery.date)}</span>
-          </div>
-        </div>
-      </header>
+      <div className="spark-flashback-shell">
+        <header className="spark-flashback-gallery-head">
+          <Link to="/flashback" className="spark-flashback-back">
+            ← Alla flashbacks
+          </Link>
+          <p className="spark-flashback-eyebrow">Flashback</p>
+          <h1 className="spark-section-title spark-flashback-title">{gallery.title}</h1>
+          <p className="spark-flashback-meta">
+            {gallery.venue} · {gallery.count} bilder · {agendaDate(gallery.date)}
+          </p>
+        </header>
 
-      <div className="spark-flashback-photos">
-        {gallery.photos.map((src, i) => (
-          <button
-            key={src + i}
-            type="button"
-            onClick={() => setActiveIndex(i)}
-            className="spark-flashback-photo"
-          >
-            <img
-              src={src}
-              alt={`${gallery.title} bild ${i + 1}`}
-              loading={i > 3 ? "lazy" : "eager"}
-              decoding="async"
-            />
-          </button>
-        ))}
+        <div className="spark-flashback-photos">
+          {gallery.photos.map((src, i) => (
+            <button
+              key={src + i}
+              type="button"
+              onClick={() => setActiveIndex(i)}
+              className="spark-flashback-photo"
+            >
+              <img
+                src={src}
+                alt={`${gallery.title} bild ${i + 1}`}
+                loading={i > 3 ? "lazy" : "eager"}
+                decoding="async"
+              />
+            </button>
+          ))}
+        </div>
       </div>
 
       {activeIndex !== null ? (

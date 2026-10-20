@@ -46,7 +46,7 @@ export type NewsItem = {
   image: string;
 };
 
-import { cercinoGalleryPool, cercinoPhotos } from "./cercinoImages";
+import { cercinoPhotos } from "./cercinoImages";
 
 const photos = cercinoPhotos;
 
@@ -284,68 +284,8 @@ export const values = [
   },
 ];
 
-export const flashbacks: Flashback[] = [
-  {
-    slug: "lonelordag-22-aug",
-    eventSlug: "lonelordag-noise",
-    title: "Lönelördag",
-    venue: "NOISE",
-    date: "2026-08-22",
-    count: 48,
-    cover: photos.hero,
-    photos: cercinoGalleryPool.slice(0, 6),
-  },
-  {
-    slug: "after-dark-15-aug",
-    eventSlug: "after-dark-kappa",
-    title: "After Dark",
-    venue: "Kappa Bar",
-    date: "2026-08-15",
-    count: 36,
-    cover: photos.dj,
-    photos: cercinoGalleryPool.slice(2, 8),
-  },
-  {
-    slug: "house-session-18-jul",
-    eventSlug: "house-session",
-    title: "House Session",
-    venue: "The Tivoli",
-    date: "2026-07-18",
-    count: 29,
-    cover: photos.crowd,
-    photos: cercinoGalleryPool.slice(4, 10),
-  },
-  {
-    slug: "studentnatt-1-aug",
-    eventSlug: "studentnatt",
-    title: "Studentnatt",
-    venue: "NOISE",
-    date: "2026-08-01",
-    count: 41,
-    cover: photos.stage,
-    photos: cercinoGalleryPool.slice(6, 12),
-  },
-  {
-    slug: "blackout-25-jul",
-    eventSlug: "blackout",
-    title: "Blackout",
-    venue: "NOC",
-    date: "2026-07-25",
-    count: 52,
-    cover: photos.club,
-    photos: cercinoGalleryPool.slice(8, 14),
-  },
-  {
-    slug: "tivoli-sommarlive",
-    eventSlug: "vinyl-friday",
-    title: "Vinyl Friday",
-    venue: "The Tivoli",
-    date: "2026-08-08",
-    count: 24,
-    cover: photos.concert,
-    photos: cercinoGalleryPool.slice(10, 16),
-  },
-];
+/** Start empty — flashbacks are created in the admin CMS. */
+export const flashbacks: Flashback[] = [];
 
 /** @deprecated use flashbacks */
 export const galleries = flashbacks;

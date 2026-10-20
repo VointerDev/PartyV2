@@ -5559,17 +5559,23 @@ a.site-banner-text:hover .site-banner-cta {
 }
 
 .spark-hero-title {
-  margin: 0;
+  margin: 28px 0 0;
   max-width: none;
   width: min(100%, var(--spark-hero-title-max, 22ch));
   font-family: var(--font-display);
   font-size: clamp(36px, 7vw, var(--spark-hero-title-size, 92px));
   font-weight: 400;
-  line-height: 0.92;
+  line-height: 1.14;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: #fff;
   animation: spark-rise 0.7s ease both;
+}
+
+@media (min-width: 768px) {
+  .spark-hero-title {
+    margin-top: 40px;
+  }
 }
 
 .spark-hero.is-center .spark-hero-content {
@@ -6260,84 +6266,92 @@ a.site-banner-text:hover .site-banner-cta {
 
 /* —— Spark flashback —— */
 .spark-flashback {
-  width: 100%;
-  background: #000;
-  padding: 0 0 72px;
-}
-
-.spark-flashback > .spark-flashback-head {
-  padding-top: 40px;
-}
-
-.spark-flashback-head {
-  display: grid;
-  gap: 14px;
-  justify-items: start;
-  margin-bottom: 40px;
-  padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
-}
-
-@media (min-width: 768px) {
-  .spark-flashback-head {
-    margin-bottom: 56px;
-    padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
-  }
-}
-
-.spark-flashback-hero {
   position: relative;
   isolation: isolate;
-  display: grid;
-  align-items: end;
-  min-height: min(52vh, 520px);
-  margin-bottom: 8px;
+  width: 100%;
+  min-height: calc(100dvh - 100px);
   overflow: hidden;
-}
-
-.spark-flashback-hero-media {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.spark-flashback-hero-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 30%;
-}
-
-.spark-flashback-hero-veil {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0.2) 40%, rgba(0, 0, 0, 0.88) 100%),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.45) 0%, transparent 55%);
-  pointer-events: none;
-}
-
-.spark-flashback-hero-content {
-  position: relative;
-  z-index: 2;
-  display: grid;
-  gap: 16px;
-  justify-items: start;
-  width: 100%;
-  padding: 28px max(16px, env(safe-area-inset-right)) 36px max(16px, env(safe-area-inset-left));
+    radial-gradient(ellipse 70% 55% at 85% 10%, rgba(241, 108, 179, 0.16), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(241, 108, 179, 0.08), transparent 50%),
+    #050505;
+  padding: 40px max(16px, env(safe-area-inset-right)) 88px max(16px, env(safe-area-inset-left));
 }
 
 @media (min-width: 768px) {
-  .spark-flashback-hero-content {
-    gap: 18px;
-    padding: 36px max(20px, env(safe-area-inset-right)) 44px max(20px, env(safe-area-inset-left));
+  .spark-flashback {
+    padding: 56px max(24px, env(safe-area-inset-right)) 110px max(24px, env(safe-area-inset-left));
   }
+}
+
+@media (min-width: 1100px) {
+  .spark-flashback {
+    padding: 72px max(28px, env(safe-area-inset-right)) 120px max(28px, env(safe-area-inset-left));
+  }
+}
+
+.spark-flashback-shell {
+  width: min(100%, 1600px);
+  margin: 0 auto;
+}
+
+.spark-flashback-head,
+.spark-flashback-gallery-head {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+  margin-bottom: 40px;
+  max-width: 42rem;
+}
+
+@media (min-width: 960px) {
+  .spark-flashback-head,
+  .spark-flashback-gallery-head {
+    margin-bottom: 56px;
+    max-width: 48rem;
+  }
+}
+
+.spark-flashback-title {
+  font-size: clamp(44px, 8vw, 84px);
+  line-height: 0.92;
+}
+
+.spark-flashback-eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-pink);
+}
+
+.spark-flashback-lead,
+.spark-flashback-meta,
+.spark-flashback-empty {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 17px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+@media (min-width: 960px) {
+  .spark-flashback-lead,
+  .spark-flashback-meta {
+    font-size: 18px;
+  }
+}
+
+.spark-flashback-empty {
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .spark-flashback-back {
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255, 255, 0.55);
   font-size: 13px;
   font-weight: 500;
+  letter-spacing: 0.02em;
   transition: color 0.15s ease;
 }
 
@@ -6345,134 +6359,21 @@ a.site-banner-text:hover .site-banner-cta {
   color: var(--color-pink);
 }
 
-.spark-flashback-hero-title {
-  margin: 0;
-  max-width: 12ch;
-  font-family: var(--font-display);
-  font-size: clamp(48px, 10vw, 96px);
-  font-weight: 400;
-  line-height: 0.9;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: #fff;
-}
-
-.spark-flashback-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.spark-flashback-chips span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 32px;
-  padding: 0 12px;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.spark-flashback-chips span:first-child {
-  border-color: transparent;
-  background: var(--color-pink);
-  color: #fff;
-}
-
-.spark-flashback-lead,
-.spark-flashback-meta {
-  margin: 0;
-  max-width: 32rem;
-  font-size: 15px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.62);
-}
-
-.spark-flashback-index {
-  list-style: none;
-  margin: 0 0 48px;
-  padding: 0 max(16px, env(safe-area-inset-right)) 0 max(16px, env(safe-area-inset-left));
-  display: grid;
-  gap: 4px;
-}
-
-@media (min-width: 768px) {
-  .spark-flashback-index {
-    margin-bottom: 64px;
-    padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
-  }
-}
-
-.spark-flashback-index-link {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 4px 16px;
-  align-items: baseline;
-  padding: 14px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  color: #fff;
-  transition: color 0.15s ease;
-}
-
-.spark-flashback-index-link:hover {
-  color: var(--color-pink);
-}
-
-.spark-flashback-index-title {
-  grid-column: 1;
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4.5vw, 48px);
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-}
-
-.spark-flashback-index-meta {
-  grid-column: 1;
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.spark-flashback-index-link:hover .spark-flashback-index-meta {
-  color: rgba(241, 108, 179, 0.75);
-}
-
-.spark-flashback-index-arrow {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  align-self: center;
-  font-size: 22px;
-  opacity: 0.35;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
-.spark-flashback-index-link:hover .spark-flashback-index-arrow {
-  opacity: 1;
-  transform: translateX(4px);
+.spark-flashback-gallery-head .spark-flashback-back {
+  margin-bottom: 4px;
 }
 
 .spark-flashback-covers {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 6px;
+  gap: 16px;
   width: 100%;
-  padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
 }
 
 @media (min-width: 640px) {
   .spark-flashback-covers {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 768px) {
-  .spark-flashback-covers {
-    padding-inline: max(20px, env(safe-area-inset-left)) max(20px, env(safe-area-inset-right));
+    gap: 20px;
   }
 }
 
@@ -6482,11 +6383,18 @@ a.site-banner-text:hover .site-banner-cta {
   }
 }
 
+@media (min-width: 1400px) {
+  .spark-flashback-covers {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 .spark-flashback-cover {
   position: relative;
   display: block;
   overflow: hidden;
-  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.03);
   aspect-ratio: 4 / 5;
 }
 
@@ -6494,12 +6402,12 @@ a.site-banner-text:hover .site-banner-cta {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.35s ease, opacity 0.25s ease;
+  transition: transform 0.4s ease, opacity 0.25s ease;
 }
 
 .spark-flashback-cover:hover img {
-  transform: scale(1.04);
-  opacity: 0.85;
+  transform: scale(1.035);
+  opacity: 0.88;
 }
 
 .spark-flashback-cover-meta {
@@ -6507,8 +6415,8 @@ a.site-banner-text:hover .site-banner-cta {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 48px 16px 16px;
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.82) 100%);
+  padding: 52px 18px 18px;
+  background: linear-gradient(180deg, transparent 0%, rgba(5, 5, 5, 0.88) 100%);
 }
 
 .spark-flashback-cover-meta p {
@@ -6523,7 +6431,7 @@ a.site-banner-text:hover .site-banner-cta {
 }
 
 .spark-flashback-cover-meta p + p {
-  margin-top: 8px;
+  margin-top: 10px;
   font-family: var(--font-sans);
   font-size: 13px;
   font-weight: 400;
@@ -6535,14 +6443,14 @@ a.site-banner-text:hover .site-banner-cta {
 .spark-flashback-photos {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
+  gap: 10px;
   width: 100%;
 }
 
 @media (min-width: 700px) {
   .spark-flashback-photos {
     grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+    gap: 14px;
   }
 }
 
@@ -6556,8 +6464,8 @@ a.site-banner-text:hover .site-banner-cta {
   display: block;
   margin: 0;
   padding: 0;
-  border: 0;
-  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
   aspect-ratio: 1;
   overflow: hidden;
   cursor: pointer;
@@ -6568,7 +6476,7 @@ a.site-banner-text:hover .site-banner-cta {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease, opacity 0.2s ease;
+  transition: transform 0.35s ease, opacity 0.2s ease;
 }
 
 .spark-flashback-photo:hover img {

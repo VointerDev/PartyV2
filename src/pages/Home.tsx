@@ -137,6 +137,8 @@ export function Home() {
   const primaryLink = site.heroPrimaryLink.trim() || "https://www.instagram.com/partyhbg/";
   const secondaryLabel = site.heroSecondaryLabel.trim() || "Kontakta oss";
   const secondaryLink = site.heroSecondaryLink.trim() || "/kontakt";
+  const tertiaryLabel = site.heroTertiaryLabel?.trim() || "Flashback";
+  const tertiaryLink = site.heroTertiaryLink?.trim() || "/flashback";
 
   return (
     <div className="spark-home">
@@ -194,6 +196,11 @@ export function Home() {
             <span {...editable("site:heroSecondary", "Hero-knapp 2")}>
               <CtaLink to={secondaryLink} className="spark-btn spark-btn--ghost">
                 {secondaryLabel}
+              </CtaLink>
+            </span>
+            <span {...editable("site:heroTertiary", "Hero-knapp 3")}>
+              <CtaLink to={tertiaryLink} className="spark-btn spark-btn--ghost">
+                {tertiaryLabel}
               </CtaLink>
             </span>
           </div>
